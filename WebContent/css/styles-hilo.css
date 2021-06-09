@@ -1,0 +1,37 @@
+.nota-container{
+	border-bottom-style: solid;
+	border-width: 1px;
+	padding-left: 30px;
+	padding-top: 16px;
+	color: white;
+}
+
+.hilo{
+	margin-top: 5px;
+	border-bottom-style: solid;
+	border-width: 1px;
+}
+
+#datos-hilo .titulo{
+	font-size: 1.2em;
+	font-weight: bold;
+	word-wrap: break-word;
+}
+#datos-hilo .fecha{
+	font-size: 0.6em;
+}
+
+#datos-nota p:nth-child(1){
+	color: #ECF5FC;
+	word-wrap: break-word;
+}
+#datos-nota .fecha{
+	font-size: 0.6em;
+	color: #ECF5FC;
+}
+#linkAbrirHilo{
+	text-decoration:none;
+}
+.btnGuardado{
+	margin-left: 25%;
+}

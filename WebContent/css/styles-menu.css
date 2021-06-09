@@ -1,0 +1,39 @@
+.menu{
+	padding-top: 48px;
+}
+.menu-administrador{
+	border-bottom: 1px solid;
+	padding-left: 24px;
+	padding-top: 24px;
+}
+.menu h1{
+	padding-left: 24px;
+}
+
+.menu ul{
+	padding-left: 24px;
+}
+.menu #botones{
+	padding-left: 24px;
+	width: 150px;
+}
+
+#nav-list{
+	font-size: 1.3em;
+	color: #351222;
+}
+#nav-list a{
+	color: #ECF5FC;
+	font-size: 0.9em;
+	font-weight: bold;
+	white-space: pre;
+}
+
+#header-nav{
+	margin: 0px;
+	padding: 0px;
+}
+
+.filtro{
+	margin-top: 8px;
+}

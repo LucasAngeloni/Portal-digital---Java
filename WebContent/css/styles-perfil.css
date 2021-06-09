@@ -1,0 +1,30 @@
+.perfil{
+	border-left-style: solid;
+	border-right-style: solid;
+	border-width: 1px;
+}
+
+.perfil .titulo{
+	padding: 8px 0px 8px 16px;
+}
+.perfil .datos-principales{
+	border-top-style: solid;
+	border-bottom-style: solid;
+	border-width: 1px;
+	padding: 32px 0px 16px 0px;
+}
+.perfil .datos-secundarios{	
+	border-bottom-style: solid;
+	border-width: 1px;
+	padding: 32px 0px 16px 0px;
+}
+.perfil #clave{
+	padding: 16px 0px 16px 16px;
+}
+.perfil .navs{
+	border-bottom-style: solid;
+	border-width: 1px;
+}
+.perfil .navs li{
+	margin-right: 150px;
+}

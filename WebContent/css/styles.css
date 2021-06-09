@@ -1,0 +1,71 @@
+body {
+  font-size: 16px;
+  color: #ECF5FC;
+  background-color: #273746;
+  margin:0px;
+}
+
+.global-container{
+	border-radius: 0;
+}
+
+.medium-col{
+	border-right-style: ridge;
+	border-left-style: solid;
+	border-bottom-style: solid;
+	border-width: 1px;
+}
+.medium-top{
+	padding: 8px 8px 8px 8px;
+	border-bottom-style: solid;
+	border-width: 1px;
+	background-color: #3C2901;
+	margin-bottom: 16px;
+	color: white;
+	
+}
+.medium-top h3{
+	margin-left:10px;
+}
+
+.cabecera{
+	padding-top: 10px;
+	border-bottom-style: solid;
+	border-width: 1px;
+}
+
+#btnEscribir, #btnRegistrarse, #btnLogin{
+	margin-top: 30px;
+}
+
+#btnComunicador{
+	font-size: 0.9em;
+}
+
+#formBuscar{
+	width: 80%;
+}
+
+#imagen-opciones-admin{
+	height: 250px;
+	width: 100%;
+}
+#imagen-usuario{
+	height: 80%;
+	width: 100%;
+	max-height: 100px;
+	max-width: 100px;
+}
+.registro{
+	margin-top:16px;
+}
+h3{
+	padding-bottom:8px;
+}
+.modal{
+	color: black;
+}
+
+.row h3{
+	align: center;
+}

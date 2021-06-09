@@ -1,0 +1,31 @@
+.image-group{
+	padding-top: 10px;
+}
+
+#imagen-categoria{
+	min-height: 150px;
+	width: 100%;
+}
+
+.nav-tabs{
+	border-bottom: none;
+	margin-left: 16px;
+	background-color: none;
+}
+.nav-tabs nth-child(n){
+	border: none;
+	background-color: none;
+}
+.card{
+	background-color: #3C2901;
+}
+
+.card-body{
+	padding-top:0px;
+	padding-bottom:0px;
+	text-align: center;
+}
+
+.card-text{
+	color: white;
+}
