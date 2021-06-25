@@ -8,10 +8,7 @@
 		value="${comentario.getNombreUsuario() }"></c:param>
 	<c:param name="fecha"
 		value="${comentario.getFechaComentario()}"></c:param>
-	<c:param name="nro_nota" value="${nro_nota }"></c:param>
-	<c:param name="fecha_aporte" value="${aporte.getFechaPublicacion() }"></c:param>
-	<c:param name="usuario_aporte" value="${aporte.getComunicador().getNombreUsuario() }"></c:param>
-
+	<c:param name="fecha_publicacion" value="${publicacion.getFechaPublicacion()}"></c:param>
 </c:url>
 <c:url var="linkQuitarMeGusta" value="ControladorComentario">
 	<c:param name="instruccion" value="quitar_me_gusta"></c:param>
@@ -19,10 +16,9 @@
 		value="${comentario.getNombreUsuario() }"></c:param>
 	<c:param name="fecha"
 		value="${comentario.getFechaComentario()}"></c:param>
-	<c:param name="nro_nota" value="${nro_nota }"></c:param>
-	<c:param name="fecha_aporte" value="${aporte.getFechaPublicacion() }"></c:param>
-	<c:param name="usuario_aporte" value="${aporte.getComunicador().getNombreUsuario() }"></c:param>
+	<c:param name="fecha_publicacion" value="${publicacion.getFechaPublicacion() }"></c:param>
 </c:url>
+
 <div class="comentario">
 	<div class="row">
 		<c:set var="usuario_comentario" value="${comentario.getUsuario() }" />
@@ -56,13 +52,9 @@
 					method="get" action="ControladorComentario">
 					<input type="hidden" name="instruccion" value="eliminar_comentario">
 					<input type="hidden" name="fecha_comentario"
-						value="${comentario.getFechaComentario() }"> <input
-						type="hidden" name="nro_nota" value="${nro_nota }"> <input
-						type="hidden" name="id_hilo" value="${aporte.getIdHilo() }">
-					<input type="hidden" name="fecha_aporte"
-						value="${aporte.getFechaPublicacion() }"> <input
-						type="hidden" name="usuario_aporte"
-						value="${aporte.getComunicador().getNombreUsuario() }">
+						value="${comentario.getFechaComentario() }">  
+					<input type="hidden" name="fecha_publicacion"
+						value="${publicacion.getFechaPublicacion() }">
 					<button type="submit" class="btn btn-outline-info btn-sm"
 						title="Eliminar">
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -116,25 +108,14 @@
 				</a>
 			</c:if>
 		</div>
-		<c:if test="${nro_nota != null}">
-			<c:url var="linkVerSubComentarios" value="ControladorComentario">
-				<c:param name="instruccion" value="ver_subcomentarios"></c:param>
-				<c:param name="fecha" value="${comentario.getFechaComentario() }"></c:param>
-				<c:param name="nro_nota" value="${nro_nota}"></c:param>
-				<c:param name="usuario_comentario"
-					value="${comentario.getNombreUsuario() }"></c:param>
-			</c:url>
-		</c:if>
-		<c:if test="${aporte != null }">
-			<c:url var="linkVerSubComentarios" value="ControladorComentario">
-				<c:param name="instruccion" value="ver_subcomentarios"></c:param>
-				<c:param name="fecha" value="${comentario.getFechaComentario() }"></c:param>
-				<c:param name="fecha_aporte" value="${aporte.getFechaPublicacion()}"></c:param>
-				<c:param name="usuario_aporte" value="${aporte.getComunicador().getNombreUsuario() }"></c:param>
-				<c:param name="usuario_comentario"
-					value="${comentario.getNombreUsuario() }"></c:param>
-			</c:url>
-		</c:if>
+		<c:url var="linkVerSubComentarios" value="ControladorComentario">
+			<c:param name="instruccion" value="ver_subcomentarios"></c:param>
+			<c:param name="fecha" value="${comentario.getFechaComentario() }"></c:param>
+			<c:param name="fecha_publicacion"
+				value="${publicacion.getFechaPublicacion()}"></c:param>
+			<c:param name="usuario_comentario"
+				value="${comentario.getNombreUsuario() }"></c:param>
+		</c:url>
 		<div class="col">
 			<label>${comentario.getNroSubcomentarios()}</label> <a
 				href="${linkVerSubComentarios }" title="Ver respuestas a este comentario"> <svg width="1em" height="1em"
@@ -152,15 +133,12 @@
 			<form id="formResponder" name="formResponder" method="post"
 				action="ControladorComentario">
 				<input type="hidden" name="instruccion" value="responder"> <input
-					type="hidden" name="nro_nota" value="${nro_nota }"> <input
 					type="hidden" name="fecha_comentario"
 					value="${comentario.getFechaComentario() }"> <input
 					type="hidden" name="usuario_comentario"
 					value="${comentario.getNombreUsuario() }"> <input
-					type="hidden" name="fecha_aporte"
-					value="${aporte.getFechaPublicacion() }"> <input
-					type="hidden" name="usuario_aporte"
-					value="${aporte.getComunicador().getNombreUsuario() }">
+					type="hidden" name="fecha_publicacion"
+					value="${publicacion.getFechaPublicacion() }">
 
 				<div class="input-group filtro">
 					<input type="text" class="" name="comentario" placeholder="Di algo"

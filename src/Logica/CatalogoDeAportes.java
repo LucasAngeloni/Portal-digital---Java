@@ -36,12 +36,10 @@ public class CatalogoDeAportes {
 	}
 	
 	public ArrayList<Aporte> getAportesHilo(int hilo) throws SQLException{
-		
 		return this.aportesData.getAportesHilo(hilo);
 	}
 	
 	public ArrayList<Aporte> getAportesComunicador(Comunicador com) throws SQLException{
-		
 		return this.aportesData.getAportesComunicador(com);
 	}
 	
@@ -86,9 +84,10 @@ public class CatalogoDeAportes {
 		try {
 			this.aportesData.insertRelevancia(aporte, usuario.getNombreUsuario());
 			usuario.insertAporteRelevante(aporte);
-			aporte.sumarRelevancia();
+			aporte.modificarRelevanciaPublicacion(1);
 		} 
 		catch (SQLException e) {
+			e.printStackTrace();
 			throw new SQLException("Ocurrió un ERROR. No se pudo relevar el Aporte");
 		}
 	}
@@ -98,7 +97,7 @@ public class CatalogoDeAportes {
 		try {
 			this.aportesData.removeRelevancia(aporte, usuario.getNombreUsuario());
 			usuario.removeAporteRelevante(aporte);
-			aporte.restarRelevancia();
+			aporte.modificarRelevanciaPublicacion(-1);
 		} 
 		catch (SQLException e) {
 			throw new SQLException("Ocurrió un ERROR. No se pudo quitar la relevancia del Aporte");

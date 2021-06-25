@@ -52,12 +52,9 @@ public abstract class Publicacion extends BusinessEntity{
 	public int getRelevancia() {
 		return relevancia;
 	}
-	
-	public void sumarRelevancia() {
-		this.relevancia++;
-	}
-	public void restarRelevancia() {
-		this.relevancia--;
+	public void modificarRelevanciaPublicacion(int modificacion) {
+		
+		this.relevancia += modificacion;
 	}
 	
 	public void setRelevancia(int relevancia) {

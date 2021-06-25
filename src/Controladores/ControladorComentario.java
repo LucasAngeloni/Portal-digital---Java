@@ -96,6 +96,7 @@ public class ControladorComentario extends HttpServlet {
 		
 		Comentario comentario = new Comentario(usuario, aporte);
 		comentario.setDescripcionComentario(texto_comentario);
+		comentario.setPublicacion(aporte);
 		try {
 			this.cco.insertComentario(comentario);
 			this.cu.updatePreferencias(usuario, "comentar", hilo.getCategorias());
@@ -106,7 +107,7 @@ public class ControladorComentario extends HttpServlet {
 		}
 		finally {
 			request.setAttribute("COMENTARIOS", aporte.getComentarios());
-			request.setAttribute("aporte", aporte);
+			request.setAttribute("publicacion", aporte);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistaComentariosNota.jsp");
 			dispatcher.forward(request, response);
 		}
@@ -121,7 +122,7 @@ public class ControladorComentario extends HttpServlet {
 		Aporte aporte = hilo.getAporte(fecha_aporte, comunicador);
 
 		request.setAttribute("COMENTARIOS", aporte.getComentarios());
-		request.setAttribute("aporte", aporte);
+		request.setAttribute("publicacion", aporte);
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/vistaComentariosNota.jsp");
 		dispatcher.forward(request, response);
@@ -131,28 +132,25 @@ public class ControladorComentario extends HttpServlet {
 		
 		Usuario usuario = (Usuario)request.getSession().getAttribute("usuario");
 		Hilo hilo = (Hilo)request.getSession().getAttribute("hilo_abierto");
+		LocalDateTime fecha_publicacion = LocalDateTime.parse(request.getParameter("fecha_publicacion"));
 		
 		String str = request.getParameter("fecha_comentario");
-		LocalDateTime fecha = LocalDateTime.parse(str);
+		LocalDateTime fecha_comentario = LocalDateTime.parse(str);
 		
 		Publicacion publicacion;
-		try {
-			int nro_nota = Integer.parseInt(request.getParameter("nro_nota"));
-			publicacion = hilo.getNota(nro_nota);
-			
-			request.setAttribute("nro_nota", nro_nota);
-			request.setAttribute("nota", (Nota)publicacion);
+		String comunicador = request.getParameter("usuario_aporte");
+		if(comunicador == null) {
+			publicacion = hilo.getNota(fecha_publicacion);
+			request.setAttribute("publicacion", (Nota)publicacion);
 		}
-		catch(NumberFormatException e) {
-			LocalDateTime fecha_aporte = LocalDateTime.parse(request.getParameter("fecha_aporte"));
-			String comunicador = request.getParameter("usuario_aporte");	
-			publicacion = hilo.getAporte(fecha_aporte, comunicador);
-			
-			request.setAttribute("aporte", (Aporte)publicacion);
+		else {
+			publicacion = hilo.getAporte(fecha_publicacion, comunicador);
+			request.setAttribute("publicacion", (Aporte)publicacion);
 		}	
+		
 		try {
-			this.cco.delete(fecha, usuario.getNombreUsuario());
-			publicacion.removeComentario(fecha, usuario.getNombreUsuario());
+			this.cco.delete(fecha_comentario, usuario.getNombreUsuario());
+			publicacion.removeComentario(fecha_comentario, usuario.getNombreUsuario());
 		} 
 		catch (SQLException e) {
 			request.setAttribute("Error",e.getMessage());
@@ -166,33 +164,7 @@ public class ControladorComentario extends HttpServlet {
 
 	private void responder(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String nombre_usuario = request.getParameter("usuario_comentario");
-        String str = request.getParameter("fecha_comentario");		
-		
-		LocalDateTime fecha_comentario = LocalDateTime.parse(str);
-		Hilo hilo = (Hilo)request.getSession().getAttribute("hilo_abierto");
-		
-		Comentario comentarioPrincipal;
-		try {
-			int nro_nota = Integer.parseInt(request.getParameter("nro_nota"));
-			comentarioPrincipal = hilo.buscarComentario(nro_nota, nombre_usuario, fecha_comentario);
-			request.setAttribute("nro_nota", nro_nota);
-		}
-		catch(NumberFormatException e) {
-			LocalDateTime fecha_aporte = LocalDateTime.parse(request.getParameter("fecha_aporte"));
-			String comunicador = request.getParameter("usuario_aporte");
-			
-			Aporte aporte = hilo.getAporte(fecha_aporte, comunicador);
-			request.setAttribute("aporte", aporte);
-			comentarioPrincipal = aporte.getComentario(nombre_usuario, fecha_comentario);
-		}
-		if(comentarioPrincipal == null)
-			//El null sucede porque al buscar los comentarios unicamente encuentra los principales y no las respuestas a comentarios
-			try {
-				comentarioPrincipal = this.cco.getOne(fecha_comentario, nombre_usuario);
-			} catch (SQLException e1) {
-				request.setAttribute("Error",e1.getMessage());
-			}
+		Comentario comentarioPrincipal = this.buscarComentario(request, response);
 		
 		String texto_comentario = request.getParameter("comentario");
 		Usuario usuario = (Usuario)request.getSession().getAttribute("usuario");
@@ -217,30 +189,24 @@ public class ControladorComentario extends HttpServlet {
 		
 		String texto_comentario = request.getParameter("comentario");
 		Usuario usuario = (Usuario)request.getSession().getAttribute("usuario");
+		LocalDateTime fecha_publicacion = LocalDateTime.parse(request.getParameter("fecha_publicacion"));
 		Hilo hilo = (Hilo)request.getSession().getAttribute("hilo_abierto");	
 		
 		Comentario comentario;
 		Publicacion publicacion;
-		try {
-			int nro_nota = Integer.parseInt(request.getParameter("nro_nota"));
-			publicacion = hilo.getNota(nro_nota);
+		String comunicador = request.getParameter("usuario_aporte");
+		if(comunicador == null) {
+			publicacion = hilo.getNota(fecha_publicacion);
 			comentario = new Comentario(usuario,(Nota)publicacion);
-			
-			publicacion.addComentario(comentario);
-			request.setAttribute("nota", (Nota)publicacion);
-			request.setAttribute("nro_nota", nro_nota);
+			request.setAttribute("publicacion", (Nota)publicacion);
 		}
-		catch(NumberFormatException e) {
-			LocalDateTime fecha_aporte = LocalDateTime.parse(request.getParameter("fecha_aporte"));
-			String comunicador = request.getParameter("usuario_aporte");
-			
-			publicacion = hilo.getAporte(fecha_aporte, comunicador);
+		else {
+			publicacion = hilo.getAporte(fecha_publicacion, comunicador);
 			comentario = new Comentario(usuario,(Aporte)publicacion);
-			
-			publicacion.addComentario(comentario);
-			request.setAttribute("aporte", (Aporte)publicacion);
+			request.setAttribute("publicacion", (Aporte)publicacion);
 		}
 		comentario.setDescripcionComentario(texto_comentario);
+		publicacion.addComentario(comentario);
 		try {
 			this.cco.insertComentario(comentario);
 			this.cu.updatePreferencias(usuario, "comentar", hilo.getCategorias());
@@ -257,7 +223,7 @@ public class ControladorComentario extends HttpServlet {
 	
 	private void verComentarios(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		int nro_nota = Integer.parseInt(request.getParameter("nro_nota"));
+		LocalDateTime fecha_nota = LocalDateTime.parse(request.getParameter("fecha_publicacion"));
 		Hilo hilo;
 		try {
 			if(request.getParameter("id_hilo") == null || request.getParameter("id_hilo") == "")
@@ -265,11 +231,10 @@ public class ControladorComentario extends HttpServlet {
 			else
 				hilo = this.ch.getOne(Integer.parseInt(request.getParameter("id_hilo")));
 
-			Nota nota = hilo.getNota(nro_nota);
+			Nota nota = hilo.getNota(fecha_nota);
 
 			request.setAttribute("COMENTARIOS", nota.getComentarios());
-			request.setAttribute("nota", nota);
-			request.setAttribute("nro_nota", nro_nota);
+			request.setAttribute("publicacion", nota);
 			
 			request.getSession().setAttribute("hilo_abierto", hilo);
 			
@@ -285,11 +250,14 @@ public class ControladorComentario extends HttpServlet {
 	private void quitarMeGusta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
 		Usuario usuario = (Usuario)request.getSession().getAttribute("usuario");
-		String usuario_comentador = request.getParameter("usuario_comentario");
-		LocalDateTime fecha = LocalDateTime.parse(request.getParameter("fecha"));
 		try {
-			this.cco.deleteLike(fecha,usuario_comentador, usuario);
-			this.verSubcomentarios(request, response);
+			Comentario comentario = this.buscarComentario(request, response);
+			this.cco.deleteLike(comentario, usuario);
+			request.setAttribute("comentario", comentario);
+			request.setAttribute("SUBCOMENTARIOS", comentario.getSubcomentarios());
+
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistaSubcomentarios.jsp");
+			dispatcher.forward(request, response);
 		} 
 		catch (SQLException e) {
 			request.setAttribute("Error", e.getMessage());
@@ -301,11 +269,14 @@ public class ControladorComentario extends HttpServlet {
 	private void meGusta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
 		
 		Usuario usuario = (Usuario)request.getSession().getAttribute("usuario");
-		String usuario_comentador = request.getParameter("usuario_comentario");
-		LocalDateTime fecha_comentario = LocalDateTime.parse(request.getParameter("fecha"));
 		try {
-			this.cco.insertLike(fecha_comentario,usuario_comentador, usuario);
-			this.verSubcomentarios(request, response);
+			Comentario comentario = this.buscarComentario(request, response);
+			this.cco.insertLike(comentario, usuario);
+			request.setAttribute("comentario", comentario);
+			request.setAttribute("SUBCOMENTARIOS", comentario.getSubcomentarios());
+
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistaSubcomentarios.jsp");
+			dispatcher.forward(request, response);
 		}		
 		catch (SQLException | NullPointerException e) {
 			request.setAttribute("Error", e.getMessage());
@@ -316,37 +287,40 @@ public class ControladorComentario extends HttpServlet {
 
 	private void verSubcomentarios(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		LocalDateTime fecha = LocalDateTime.parse(request.getParameter("fecha"));
+		Comentario comentario = this.buscarComentario(request, response);
+		request.setAttribute("comentario", comentario);
+		request.setAttribute("SUBCOMENTARIOS", comentario.getSubcomentarios());
+
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/vistaSubcomentarios.jsp");
+		dispatcher.forward(request, response);				
+	}
+	
+	private Comentario buscarComentario(HttpServletRequest request, HttpServletResponse response) {
+		LocalDateTime fecha_comentario = LocalDateTime.parse(request.getParameter("fecha"));
 		String nombre_usuario = request.getParameter("usuario_comentario");
+		LocalDateTime fecha_publicacion = LocalDateTime.parse(request.getParameter("fecha_publicacion"));
 		
 		Comentario comentario = null;
 		Hilo hilo = (Hilo)request.getSession().getAttribute("hilo_abierto");
-		try {
-			int nro_nota = Integer.parseInt(request.getParameter("nro_nota"));
-			request.setAttribute("nro_nota", nro_nota);
-			comentario = hilo.buscarComentario(nro_nota, nombre_usuario, fecha);
+		
+		String comunicador = request.getParameter("usuario_aporte");
+		if(comunicador == null) {
+			Nota nota = hilo.getNota(fecha_publicacion);
+			comentario = nota.getComentario(nombre_usuario, fecha_comentario);
+			request.setAttribute("publicacion", nota);
 		}
-		catch(NumberFormatException e) {
-			LocalDateTime fecha_aporte = LocalDateTime.parse(request.getParameter("fecha_aporte"));
-			String comunicador = request.getParameter("usuario_aporte");
-			
-			Aporte aporte = hilo.getAporte(fecha_aporte, comunicador);
-			request.setAttribute("aporte", aporte);
-			comentario = hilo.buscarComentario(fecha_aporte, comunicador, nombre_usuario, fecha);
+		else {
+			Aporte aporte = hilo.getAporte(fecha_publicacion, comunicador);
+			comentario = aporte.getComentario(nombre_usuario, fecha_comentario);
+			request.setAttribute("publicacion", aporte);
 		}
-		finally {
-			if(comentario == null)
-				try {
-					comentario = this.cco.getOne(fecha, nombre_usuario);
-				} catch (SQLException e) {
-					request.setAttribute("Error", e.getMessage());
-				}
-			request.setAttribute("comentario", comentario);
-			request.setAttribute("SUBCOMENTARIOS", comentario.getSubcomentarios());
-
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistaSubcomentarios.jsp");
-			dispatcher.forward(request, response);				
-		}
+		if(comentario == null)
+			try {
+				comentario = this.cco.getOne(LocalDateTime.parse(request.getParameter("fecha")), request.getParameter("usuario_comentario"));
+			} catch (SQLException e) {
+				request.setAttribute("Error", e.getMessage());
+			}
+		return comentario;
 	}
 
 	/**

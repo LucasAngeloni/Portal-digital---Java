@@ -13,8 +13,4 @@ public class Nota extends Publicacion{
 		super(descripcion);
 	}
 	
-	public void modificarRelevanciaPublicacion(int modificacion) {
-		
-		this.relevancia += modificacion;
-	}
 }

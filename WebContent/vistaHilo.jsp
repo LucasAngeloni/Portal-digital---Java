@@ -67,7 +67,7 @@
 			</div>
 			<c:set var="COMENTARIOS" value="${hilo_abierto.getComentarios()}"
 				scope="request" />
-			<c:set var="nro_nota" value="1" scope="request" />
+			<c:set var="publicacion" value="${nota}" scope="request" />
 			<jsp:include page="vistaComentarios.jsp"></jsp:include>
 		</div>
 	</div>

@@ -24,14 +24,16 @@
 			</div>
 			
 			<c:set var="hilo" value="${hilo_abierto}" scope="request" />
-			<c:if test="${nota != null }">
+			<c:if test="${publicacion.getClass().toString().equals('class Modelo.Nota') }">
 				<div class="nota-container">
 					<c:set var="comunicador" value="${hilo.getComunicador() }" scope="request" />
+					<c:set var="nota" value="${publicacion}" scope="request" />
 					<jsp:include page="vistaNota.jsp"></jsp:include>
 				</div>
 			</c:if>
-			<c:if test="${aporte != null }">
+			<c:if test="${publicacion.getClass().toString().equals('class Modelo.Aporte')}">
 				<div class="nota-container">
+					<c:set var="aporte" value="${publicacion}" scope="request" />
 					<jsp:include page="vistaAporte.jsp"></jsp:include>
 				</div>
 			</c:if>

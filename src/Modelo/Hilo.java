@@ -36,7 +36,6 @@ public class Hilo {
 	}
 	
 	public Hilo(int id_hilo) {
-		
 		this.idHilo = id_hilo;
 	}
 	
@@ -160,8 +159,8 @@ public class Hilo {
 		this.categorias.add(categoria);
 	}
 	
-	public Comentario buscarComentario(int nota,String nombre_usuario, LocalDateTime fecha_comentario) {
-		return this.getNota(nota).getComentario(nombre_usuario, fecha_comentario);
+	public Comentario buscarComentario(LocalDateTime fecha_nota,String nombre_usuario, LocalDateTime fecha_comentario) {
+		return this.getNota(fecha_nota).getComentario(nombre_usuario, fecha_comentario);
 	}
 	
 	public Comentario buscarComentario(LocalDateTime fecha_aporte, String comunicador,String nombre_usuario, LocalDateTime fecha_comentario) {

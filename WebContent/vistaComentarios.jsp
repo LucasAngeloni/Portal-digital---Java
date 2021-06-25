@@ -10,12 +10,13 @@
 			<form id="formComentar" name="formComentar" method="get"
 				action="ControladorComentario">
 				<input type="hidden" name="instruccion" value="comentar"> 
-				<input type="hidden" name="nro_nota" value="${nro_nota }"> 
-				<input type="hidden" name="id_hilo" value="${aporte.getIdHilo() }">
-				<input type="hidden" name="fecha_aporte"
-					value="${aporte.getFechaPublicacion() }"> 
-				<input type="hidden" name="usuario_aporte"
-					value="${aporte.getComunicador().getNombreUsuario() }">
+				<input type="hidden" name="id_hilo" value="${hilo_abierto.getIdHilo() }">
+				<input type="hidden" name="fecha_publicacion"
+					value="${publicacion.getFechaPublicacion() }">
+				<c:if test="${publicacion.getClass().toString().equals('class Modelo.Aporte') }">
+					<input type="hidden" name="usuario_aporte"
+						value="${publicacion.getComunicador().getNombreUsuario() }">
+				</c:if> 
 
 				<div class="input-group mb-4 filtro">
 					<input type="text" name="comentario"
@@ -29,6 +30,11 @@
 	
 	<c:forEach var="comentario" items="${COMENTARIOS }">
 		<c:set var="comentario" value="${comentario}" scope="request" />
-		<jsp:include page="vistaComentario.jsp"></jsp:include>
+		<c:if test="${publicacion.getClass().toString().equals('class Modelo.Aporte') }">
+			<jsp:include page="vistaComentarioAporte.jsp"></jsp:include>
+		</c:if>
+		<c:if test="${publicacion.getClass().toString().equals('class Modelo.Nota') }">
+			<jsp:include page="vistaComentarioNota.jsp"></jsp:include>
+		</c:if> 
 	</c:forEach>
 </div>

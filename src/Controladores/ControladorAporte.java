@@ -138,7 +138,6 @@ public class ControladorAporte extends HttpServlet {
 		
 		LocalDateTime fecha_aporte = LocalDateTime.parse(request.getParameter("fecha_aporte"));
 		String comunicador_aporte = request.getParameter("comunicador_aporte");
-		
 		try {
 			Aporte aporte = hilo.getAporte(fecha_aporte, comunicador_aporte);
 			this.ca.insertRelevancia(aporte, usuario);

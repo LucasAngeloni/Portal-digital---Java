@@ -2,6 +2,7 @@ package Controladores;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -88,14 +89,14 @@ public class ControladorNota extends HttpServlet {
 
 	private void modificarNota(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		int nro_nota = Integer.parseInt(request.getParameter("nro_nota"));
+		LocalDateTime fecha_nota = LocalDateTime.parse(request.getParameter("fecha_publicacion"));
 		int id_hilo = Integer.parseInt(request.getParameter("id_hilo"));
 		String descripcion = request.getParameter("descripcion_nota");
 		
 		Hilo hilo;
 		try {
 			hilo = this.ch.getOne(id_hilo);
-			Nota notaModificada = hilo.getNota(nro_nota);
+			Nota notaModificada = hilo.getNota(fecha_nota);
 			notaModificada.setDescripcion(descripcion);
 			
 			this.cn.update(notaModificada);
@@ -113,10 +114,10 @@ public class ControladorNota extends HttpServlet {
 	
 	private void eliminarNota(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		int id_nota = Integer.parseInt(request.getParameter("id_nota"));
+		LocalDateTime fecha_nota = LocalDateTime.parse(request.getParameter("fecha_publicacion"));
 		Hilo hilo = (Hilo)request.getSession().getAttribute("hilo_abierto");
 		try {
-			this.cn.delete(hilo, hilo.getNota(id_nota));
+			this.cn.delete(hilo, hilo.getNota(fecha_nota));
 			request.setAttribute("Info", "La nota ha sido eliminada correctamente");
 		} 
 		catch (SQLException e) {
@@ -131,14 +132,13 @@ public class ControladorNota extends HttpServlet {
 	private void vistaModificarNota(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		Hilo hilo;
-		int nota = Integer.parseInt(request.getParameter("id_nota"));
 		try {
 			if(request.getParameter("id_hilo") == null)
 				hilo = (Hilo)request.getSession().getAttribute("hilo_abierto");
 			else
 				hilo = this.ch.getOne(Integer.parseInt(request.getParameter("id_hilo")));
 
-			request.setAttribute("id_nota", nota);
+			request.setAttribute("modificar_nota", true);
 			request.setAttribute("hilo_abierto", hilo);
 
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistaModificarNota.jsp");
@@ -194,10 +194,10 @@ public class ControladorNota extends HttpServlet {
 			if(request.getParameter("hilo") == null)
 				hilo = (Hilo)request.getSession().getAttribute("hilo_abierto");
 			else
-				hilo = this.ch.getOne(Integer.parseInt(request.getParameter("hilo")));			
+				hilo = this.ch.getOne(Integer.parseInt(request.getParameter("id_hilo")));			
 
 			Usuario usuario = (Usuario)request.getSession().getAttribute("usuario");
-			Nota nota = hilo.getNota(Integer.parseInt(request.getParameter("nota")));
+			Nota nota = hilo.getNota(LocalDateTime.parse(request.getParameter("fecha_publicacion")));
 
 			this.cn.modificarRelevanciaPublicacion(hilo,nota,usuario,-1);
 		}
@@ -218,10 +218,10 @@ public class ControladorNota extends HttpServlet {
 			if(request.getParameter("hilo") == null)
 				hilo = (Hilo)request.getSession().getAttribute("hilo_abierto");
 			else
-				hilo = this.ch.getOne(Integer.parseInt(request.getParameter("hilo")));			
+				hilo = this.ch.getOne(Integer.parseInt(request.getParameter("id_hilo")));			
 
 			Usuario usuario = (Usuario)request.getSession().getAttribute("usuario");
-			Nota nota = hilo.getNota(Integer.parseInt(request.getParameter("nota")));
+			Nota nota = hilo.getNota(LocalDateTime.parse(request.getParameter("fecha_publicacion")));
 
 			this.cn.modificarRelevanciaPublicacion(hilo,nota,usuario,1);
 			this.cu.updatePreferencias(usuario,request.getParameter("instruccion"), hilo.getCategorias());

@@ -64,6 +64,12 @@ public class Comentario {
 	public void setLikes(int likes) {
 		this.likes = likes;
 	}
+	public void quitarLike() {
+		this.likes--;
+	}
+	public void agregarLike() {
+		this.likes++;
+	}
 	public Comentario getComentarioPrincipal() {
 		return comentarioPrincipal;
 	}

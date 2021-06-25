@@ -57,22 +57,24 @@ public class CatalogoDeComentarios {
 		}
 	}
 	
-	public void deleteLike(LocalDateTime fecha_comentario, String usuario_comentador, Usuario usuario) throws SQLException {
+	public void deleteLike(Comentario comentario, Usuario usuario) throws SQLException {
 		
 		try {
-			this.comentarioData.deleteLike(fecha_comentario, usuario_comentador, usuario.getNombreUsuario());
-			usuario.removeLike(fecha_comentario,usuario_comentador);
+			this.comentarioData.deleteLike(comentario.getFechaComentario(), comentario.getNombreUsuario(), usuario.getNombreUsuario());
+			usuario.removeLike(comentario);
+			comentario.quitarLike();
 		} 
 		catch (SQLException e) {
 			throw new SQLException("ERROR. No se pudo quitar el like");
 		}		
 	}
 	
-	public void insertLike(LocalDateTime fecha_comentario, String usuario_comentador,Usuario usuario) throws SQLException {
+	public void insertLike(Comentario comentario,Usuario usuario) throws SQLException {
 		
 		try {
-			this.comentarioData.insertLike(fecha_comentario,usuario_comentador, usuario.getNombreUsuario());
-			usuario.addLike(fecha_comentario,usuario_comentador);
+			this.comentarioData.insertLike(comentario.getFechaComentario(),comentario.getNombreUsuario(), usuario.getNombreUsuario());
+			usuario.addLike(comentario);
+			comentario.agregarLike();
 		}
 		catch (SQLException e) {
 			throw new SQLException("ERROR. No se pudo poner el like");
@@ -83,6 +85,7 @@ public class CatalogoDeComentarios {
 		try {
 			this.comentarioData.insertComentario(comentario);
 		} catch (SQLException e) {
+			e.printStackTrace();
 			throw new SQLException("ERROR. No se pudo insertar el comentario");
 		}
 	}

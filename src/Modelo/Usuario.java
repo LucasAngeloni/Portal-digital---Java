@@ -249,7 +249,6 @@ public class Usuario extends BusinessEntity{
 	}
 	
 	public boolean validarRelevanciaAporte(Aporte aporte) {
-		
 		for(Aporte aporteRelevante: this.aportesRelevantes) {
 			if(aporteRelevante.getIdHilo() == aporte.getIdHilo() && aporteRelevante.getFechaPublicacion().equals(aporte.getFechaPublicacion())
 					&& aporteRelevante.getComunicador().getNombreUsuario().equals(aporte.getComunicador().getNombreUsuario())) 
@@ -291,11 +290,11 @@ public class Usuario extends BusinessEntity{
 		this.aportesRelevantes.add(aporte);
 	}
 
-	public void removeLike(LocalDateTime fecha_comentario, String usuario_comentador) {
-		
+	public void removeLike(Comentario comentarioLike) {
 		int i = 0;
 		for(Comentario comentario: this.comentariosQueLeGustan) {
-			if(comentario.getFechaComentario().equals(fecha_comentario) && comentario.getNombreUsuario().equals(usuario_comentador)){
+			if(comentario.getFechaComentario().equals(comentarioLike.getFechaComentario()) && 
+					comentario.getNombreUsuario().equals(comentarioLike.getNombreUsuario())){
 				this.comentariosQueLeGustan.remove(i);
 				break;
 			}
@@ -303,8 +302,7 @@ public class Usuario extends BusinessEntity{
 		}
 	}
 	
-	public void addLike(LocalDateTime fecha_comentario, String usuario_comentador) {
-		Comentario comentarioLike = new Comentario(new Usuario(usuario_comentador),fecha_comentario,null);
+	public void addLike(Comentario comentarioLike) {
 		this.comentariosQueLeGustan.add(comentarioLike);
 	}
 }

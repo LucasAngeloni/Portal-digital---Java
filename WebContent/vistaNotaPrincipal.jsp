@@ -12,12 +12,12 @@
 <c:url var="linkRelevarNota" value="ControladorNota">
 	<c:param name="instruccion" value="relevar_nota"></c:param>
 	<c:param name="hilo" value="${hilo.getIdHilo()}"></c:param>
-	<c:param name="nota" value="1"></c:param>
+	<c:param name="fecha_publicacion" value="${notaPrincipal.getFechaPublicacion() }"></c:param>
 </c:url>
 <c:url var="linkQuitarRelevancia" value="ControladorNota">
 	<c:param name="instruccion" value="quitar_relevancia"></c:param>
 	<c:param name="hilo" value="${hilo.getIdHilo()}"></c:param>
-	<c:param name="nota" value="1"></c:param>
+	<c:param name="fecha_publicacion" value="${notaPrincipal.getFechaPublicacion() }"></c:param>
 </c:url>
 <c:url var="linkGuardarHilo" value="ControladorHilo">
 	<c:param name="instruccion" value="guardar_hilo"></c:param>
@@ -33,7 +33,7 @@
 </c:url>
 <c:url var="linkVerComentarios" value="ControladorComentario">
 	<c:param name="instruccion" value="ver_comentarios"></c:param>
-	<c:param name="nro_nota" value="1"></c:param>
+	<c:param name="fecha_publicacion" value="${notaPrincipal.getFechaPublicacion() }"></c:param>
 	<c:param name="id_hilo" value="${hilo.getIdHilo() }"></c:param>
 </c:url>
 <c:url var="linkPerfil" value="ControladorUsuario">
@@ -47,7 +47,7 @@
 <c:url var="linkVistaModificarNota" value="ControladorNota">
 	<c:param name="instruccion" value="vista_modificar_nota"></c:param> 
 	<c:param name="id_hilo" value="${hilo.getIdHilo()}"></c:param>
-	<c:param name="id_nota" value="1"></c:param>
+	<c:param name="fecha_publicacion" value="${notaPrincipal.getFechaPublicacion() }"></c:param>
 </c:url>
 <c:url var="linkEliminarHilo" value="ControladorHilo">
 	<c:param name="instruccion" value="eliminar_hilo"></c:param>
@@ -76,7 +76,7 @@
 		<div id="datos-hilo" class="row">
 			<div class="col-8 titulo">
 				<c:choose>
-					<c:when test="${id_nota != null && id_nota == 1}">
+					<c:when test="${modificar_nota != null && modificar_nota}">
 						<form class="form" id="formDescripcion" name="formDescripcion"
 							method="get" action="ControladorHilo" accept-charset="utf-8">
 
@@ -137,13 +137,13 @@
 
 		<div id="datos-nota" class="row">
 			<c:choose>
-				<c:when test="${id_nota != null && id_nota == 1}">
+				<c:when test="${modificar_nota != null && modificar_nota}">
 					<div class="col">
 						<form class="form" id="formDescripcion" name="formDescripcion"
 							method="get" action="ControladorNota" accept-charset="utf-8">
 							<input type="hidden" name="instruccion" value="modificar_nota">
-							<input type="hidden" name="nro_nota" value="1"> <input
-								type="hidden" name="id_hilo" value="${hilo.getIdHilo() }">
+							<input type="hidden" name="fecha_publicacion" value="${nota.getFechaPublicacion() }">
+							<input type="hidden" name="id_hilo" value="${hilo.getIdHilo() }">
 
 							<div class="row input-group mb-3 ">
 								<textarea class="form-control" name="descripcion_nota"
