@@ -76,7 +76,7 @@
 		<div id="datos-hilo" class="row">
 			<div class="col-8 titulo">
 				<c:choose>
-					<c:when test="${modificar_nota != null && modificar_nota}">
+					<c:when test="${fecha_nota_modificar != null && notaPrincipal.getFechaPublicacion().equals(fecha_nota_modificar)}">
 						<form class="form" id="formDescripcion" name="formDescripcion"
 							method="get" action="ControladorHilo" accept-charset="utf-8">
 
@@ -137,7 +137,7 @@
 
 		<div id="datos-nota" class="row">
 			<c:choose>
-				<c:when test="${modificar_nota != null && modificar_nota}">
+				<c:when test="${fecha_nota_modificar != null && notaPrincipal.getFechaPublicacion().equals(fecha_nota_modificar)}">
 					<div class="col">
 						<form class="form" id="formDescripcion" name="formDescripcion"
 							method="get" action="ControladorNota" accept-charset="utf-8">

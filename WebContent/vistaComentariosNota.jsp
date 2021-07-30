@@ -42,6 +42,9 @@
 		<c:if test="${Error != null }">
 			<div class="alert alert-danger" role="alert">${Error }</div>
 		</c:if>
+		<c:if test="${Exito != null }">
+			<div class="alert alert-success" role="alert">${Exito }</div>
+		</c:if>
 	</div>
 <jsp:include page="vistaAvisoRegistroModal.jsp"></jsp:include>
 </body>

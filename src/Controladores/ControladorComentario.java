@@ -82,7 +82,6 @@ public class ControladorComentario extends HttpServlet {
 			break;
 		}
 	}
-
 	private void comentarAporte(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String texto_comentario = request.getParameter("comentario");
@@ -171,8 +170,9 @@ public class ControladorComentario extends HttpServlet {
 		Comentario comentario = new Comentario(usuario,LocalDateTime.now(),comentarioPrincipal);
 		comentario.setDescripcionComentario(texto_comentario);
 		try {
-			this.cco.insertSubComentario(comentario);
+			this.cco.insertSubComentario(comentarioPrincipal, comentario);
 			
+			request.setAttribute("Exito", "El comentario fue realizado exitosamente");
 			request.setAttribute("comentario", comentarioPrincipal);
 			request.setAttribute("SUBCOMENTARIOS", comentarioPrincipal.getSubcomentarios());
 		} 
@@ -296,7 +296,7 @@ public class ControladorComentario extends HttpServlet {
 	}
 	
 	private Comentario buscarComentario(HttpServletRequest request, HttpServletResponse response) {
-		LocalDateTime fecha_comentario = LocalDateTime.parse(request.getParameter("fecha"));
+		LocalDateTime fecha_comentario = LocalDateTime.parse(request.getParameter("fecha_comentario"));
 		String nombre_usuario = request.getParameter("usuario_comentario");
 		LocalDateTime fecha_publicacion = LocalDateTime.parse(request.getParameter("fecha_publicacion"));
 		
@@ -316,7 +316,7 @@ public class ControladorComentario extends HttpServlet {
 		}
 		if(comentario == null)
 			try {
-				comentario = this.cco.getOne(LocalDateTime.parse(request.getParameter("fecha")), request.getParameter("usuario_comentario"));
+				comentario = this.cco.getOne(fecha_comentario, nombre_usuario);
 			} catch (SQLException e) {
 				request.setAttribute("Error", e.getMessage());
 			}

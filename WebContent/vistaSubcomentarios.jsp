@@ -24,14 +24,14 @@
 				<h5>Comentario</h5>
 			</div>
 
-			<strong> <c:if
+			<h5> <c:if
 					test="${publicacion.getClass().toString().equals('class Modelo.Aporte') }">
 					<jsp:include page="vistaComentarioAporte.jsp"></jsp:include>
 				</c:if> <c:if
 					test="${publicacion.getClass().toString().equals('class Modelo.Nota') }">
 					<jsp:include page="vistaComentarioNota.jsp"></jsp:include>
 				</c:if>
-			</strong>
+			</h5>
 
 			<div class="row titulo-comentarios">
 				<h6>Respuestas</h6>

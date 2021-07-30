@@ -6,7 +6,7 @@
 	<c:param name="instruccion" value="me_gusta"></c:param>
 	<c:param name="usuario_comentario"
 		value="${comentario.getNombreUsuario() }"></c:param>
-	<c:param name="fecha"
+	<c:param name="fecha_comentario"
 		value="${comentario.getFechaComentario()}"></c:param>
 	<c:param name="fecha_publicacion" value="${publicacion.getFechaPublicacion()}"></c:param>
 </c:url>
@@ -14,7 +14,7 @@
 	<c:param name="instruccion" value="quitar_me_gusta"></c:param>
 	<c:param name="usuario_comentario"
 		value="${comentario.getNombreUsuario() }"></c:param>
-	<c:param name="fecha"
+	<c:param name="fecha_comentario"
 		value="${comentario.getFechaComentario()}"></c:param>
 	<c:param name="fecha_publicacion" value="${publicacion.getFechaPublicacion() }"></c:param>
 </c:url>
@@ -110,7 +110,7 @@
 		</div>
 		<c:url var="linkVerSubComentarios" value="ControladorComentario">
 			<c:param name="instruccion" value="ver_subcomentarios"></c:param>
-			<c:param name="fecha" value="${comentario.getFechaComentario() }"></c:param>
+			<c:param name="fecha_comentario" value="${comentario.getFechaComentario() }"></c:param>
 			<c:param name="fecha_publicacion"
 				value="${publicacion.getFechaPublicacion()}"></c:param>
 			<c:param name="usuario_comentario"

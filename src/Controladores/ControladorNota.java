@@ -132,13 +132,14 @@ public class ControladorNota extends HttpServlet {
 	private void vistaModificarNota(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		Hilo hilo;
+		LocalDateTime fecha_nota = LocalDateTime.parse(request.getParameter("fecha_publicacion"));
 		try {
 			if(request.getParameter("id_hilo") == null)
 				hilo = (Hilo)request.getSession().getAttribute("hilo_abierto");
 			else
 				hilo = this.ch.getOne(Integer.parseInt(request.getParameter("id_hilo")));
 
-			request.setAttribute("modificar_nota", true);
+			request.setAttribute("fecha_nota_modificar", fecha_nota);
 			request.setAttribute("hilo_abierto", hilo);
 
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistaModificarNota.jsp");

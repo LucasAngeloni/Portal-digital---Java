@@ -29,6 +29,7 @@
 <c:url var="linkVistaModificarNota" value="ControladorNota">
 	<c:param name="instruccion" value="vista_modificar_nota"></c:param>
 	<c:param name="id_hilo" value="${hilo.getIdHilo()}"></c:param>
+	<c:param name="fecha_publicacion" value="${nota.getFechaPublicacion() }"></c:param>
 </c:url>
 							
 <div class="row nota-container">		
@@ -52,7 +53,7 @@
 	<div class="col">
 		<div id="datos-nota" class="row">
 			<c:choose>
-				<c:when test="${modificar_nota != null && modificar_nota}">
+				<c:when test="${fecha_nota_modificar != null && nota.getFechaPublicacion().equals(fecha_nota_modificar)}">
 					<div class="col-8">
 						<form class="form" id="formDescripcion" name="formDescripcion" method="post" action="ControladorNota">
 							<input type="hidden" name="instruccion" value="modificar_nota">

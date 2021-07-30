@@ -65,6 +65,7 @@ public class CatalogoDeComentarios {
 			comentario.quitarLike();
 		} 
 		catch (SQLException e) {
+			e.printStackTrace();
 			throw new SQLException("ERROR. No se pudo quitar el like");
 		}		
 	}
@@ -77,6 +78,7 @@ public class CatalogoDeComentarios {
 			comentario.agregarLike();
 		}
 		catch (SQLException e) {
+			e.printStackTrace();
 			throw new SQLException("ERROR. No se pudo poner el like");
 		}
 	}
@@ -90,11 +92,12 @@ public class CatalogoDeComentarios {
 		}
 	}
 	
-	public void insertSubComentario(Comentario comentario) throws SQLException {
+	public void insertSubComentario(Comentario comentarioPadre, Comentario comentario) throws SQLException {
 		try {
 			this.comentarioData.insertSubComentario(comentario);
-			comentario.getComentarioPrincipal().addSubcomentario(comentario);
+			comentarioPadre.addSubcomentario(comentario);
 		} catch (SQLException e) {
+			e.printStackTrace();
 			throw new SQLException("ERROR. No se pudo insertar el subcomentario");
 		}
 	}

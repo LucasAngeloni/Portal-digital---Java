@@ -93,7 +93,7 @@ else
 					</div>
 
 					<div class="form-group row">
-						<label for="fechaNacimiento" class="col-12 col-form-label"><strong>Fecha
+						<label for="fecha_nacimiento" class="col-12"><strong>Fecha
 								de nacimiento</strong></label> 
 						<input type="date" id="fecha_nacimiento" name="fecha_nacimiento"
 									value="${fecha_nacimiento }" min="1940-01-01" max="2021-01-01"> 

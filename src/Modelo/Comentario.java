@@ -15,33 +15,27 @@ public class Comentario {
 	private Publicacion publicacion;
 	
 	public Comentario(Usuario usuario,LocalDateTime fecha,Comentario comentario_padre) {
-		
 		this.usuarioCreador = usuario;
 		this.fechaComentario = fecha;
 		this.likes = 0;
-		this.nroSubcomentarios = 0;
 		this.comentarioPrincipal = comentario_padre;
 		this.setSubcomentarios(new ArrayList<Comentario>());
 	}
 	
 	public Comentario(Usuario usuario, Nota nota) {
-		
 		this.usuarioCreador = usuario;
 		this.publicacion = nota;		
 		this.fechaComentario = LocalDateTime.now();
 		this.likes = 0;
-		this.nroSubcomentarios = 0;
 		this.comentarioPrincipal = null;
 		this.setSubcomentarios(new ArrayList<Comentario>());
 	}
 	
 	public Comentario(Usuario usuario, Aporte aporte) {
-		
 		this.usuarioCreador = usuario;
 		this.publicacion = aporte;		
 		this.fechaComentario = LocalDateTime.now();
 		this.likes = 0;
-		this.nroSubcomentarios = 0;
 		this.comentarioPrincipal = null;
 		this.setSubcomentarios(new ArrayList<Comentario>());
 	}
@@ -77,7 +71,7 @@ public class Comentario {
 		this.comentarioPrincipal = comentario_principal;
 	}
 	public int getNroSubcomentarios() {
-		return nroSubcomentarios;
+		return this.nroSubcomentarios;
 	}
 	public void setNroSubcomentarios(int nro_subcomentarios) {
 		this.nroSubcomentarios = nro_subcomentarios;
@@ -158,10 +152,11 @@ public class Comentario {
 	}
 
 	public ArrayList<Comentario> getSubcomentarios() {
-		return subcomentarios;
+		return this.subcomentarios;
 	}
 	public void addSubcomentario(Comentario subcomentario) {
 		this.subcomentarios.add(subcomentario);
+		this.nroSubcomentarios++;
 	}
 
 	public void setSubcomentarios(ArrayList<Comentario> subcomentarios) {

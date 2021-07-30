@@ -1,6 +1,5 @@
 package Controladores;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -130,19 +129,24 @@ public class ControladorUsuario extends HttpServlet {
 		Usuario usuario = (Usuario)request.getSession().getAttribute("usuario");
 		
 		String imagen = request.getParameter("imagen_usuario");
-		String formato = imagen.split("[.]+")[1]; 
-		String DIRECCION_IMGS = new File (".").getAbsolutePath()+"\\PortalDigital\\WebContent\\imgs\\usuarios\\";
+		//String formato = imagen.split("[.]+")[1]; 
+		//String DIRECCION_IMGS = new File("").getAbsolutePath()+"\\PortalDigital\\WebContent\\imgs\\usuarios\\";
 		
-		String imagen_usuario =  DIRECCION_IMGS + usuario.getNombreUsuario() + "." + formato;
+		//String imagen_usuario =  DIRECCION_IMGS + usuario.getNombreUsuario() + "." + formato;
+		//String formato = imagen.split("[.]+")[1];			
+		String myStorageFolder= "/imgs/"; // this is folder name in where I want to store files. 
+		String DIRECCION_IMGS = request.getServletContext().getRealPath(myStorageFolder);
+		//String imagen_usuario = DIRECCION_IMGS + usuario.getNombreUsuario() + "." + formato;
 		
-		System.out.println(imagen_usuario);
+		//System.out.println(imagen_usuario);
 		
 		String imagen_anterior = usuario.getImagen();
-		usuario.setImagen(imagen_usuario);
-		usuario.setState(States.MODIFIED);
+		//usuario.setImagen(imagen_usuario);
+		//usuario.setState(States.MODIFIED);
 		try {
-			this.cu.save(usuario);
-			ControladorLogin.copyFile(imagen,imagen_usuario);
+			this.cu.cambiarImagen(usuario, imagen, DIRECCION_IMGS);
+			//this.cu.save(usuario);
+			//ControladorLogin.copyFile(imagen,imagen_usuario);
 			request.setAttribute("Info","Imagen modificada");
 		} 
 		catch (SQLException | ExcepcionCampos e) {

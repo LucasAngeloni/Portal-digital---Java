@@ -1,10 +1,17 @@
 package Logica;
 
+import java.io.IOException;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import Controladores.ControladorLogin;
 import Datos.EsUsuarioAdministradorException;
 import Datos.PreferenciasData;
 import Datos.UsuarioData;
@@ -14,6 +21,18 @@ import Modelo.Categoria;
 import Modelo.Hilo;
 
 public class CatalogoDeUsuarios {
+	
+	public static void main(String[] args) {
+		CatalogoDeUsuarios cu = new CatalogoDeUsuarios();
+		
+		try {
+			cu.validarImagen("aa.jfifs");
+			System.out.println("Válida");
+		} catch (ExcepcionCampos e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	private UsuarioData UsuarioData;	
 	
@@ -72,7 +91,7 @@ public class CatalogoDeUsuarios {
 		}
 	}
 	
-	public void save(Usuario usuario) throws ExcepcionCampos,SQLException{
+	public void save(Usuario usuario) throws ExcepcionCampos, SQLException{
 		
 		if(usuario.getState() == States.NEW) 
 			this.validarCampos(usuario);
@@ -90,6 +109,25 @@ public class CatalogoDeUsuarios {
 		}
 	}
 
+	public void cambiarImagen(Usuario usuario, String imagen, String direccion_imgs) throws ExcepcionCampos, SQLException, IOException {
+		this.validarImagen(imagen);
+		String formato = imagen.split("[.]+")[1];
+		String imagen_usuario = direccion_imgs + usuario.getNombreUsuario() + "." + formato;
+		
+		usuario.setImagen(imagen_usuario);
+		usuario.setState(States.MODIFIED);
+		
+		this.save(usuario);
+		this.copyFile(imagen,imagen_usuario);
+	}
+	
+	private void validarImagen(String imagen) throws ExcepcionCampos {
+		Pattern pat = Pattern.compile(".+(.jpg|.png|.jfif)$");
+		Matcher mat = pat.matcher(imagen);
+		if(!mat.matches())
+			throw new ExcepcionCampos("El formato de la imagen no es válida. Debe ser .jpg, .png o .jfif");
+	}
+	
 	private void validarCampos(Usuario usuario) throws ExcepcionCampos{
 		
 		if(!usuario.getContraseña().equals(usuario.getRepeticionContraseña()))
@@ -190,5 +228,18 @@ public class CatalogoDeUsuarios {
 		public ExcepcionCampos(String msg) {
 			super(msg);
 		}
+	}
+	
+	private void copyFile(String origen, String destino) throws IOException {
+		
+		Path from = Paths.get(origen);
+		Path to = Paths.get(destino);
+		
+		CopyOption[] options = new CopyOption[] {
+				StandardCopyOption.REPLACE_EXISTING,
+				StandardCopyOption.COPY_ATTRIBUTES
+		};
+		
+		Files.copy(from, to, options);
 	}
 }

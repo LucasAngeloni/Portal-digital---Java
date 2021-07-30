@@ -38,7 +38,6 @@ public class ControladorLogin extends HttpServlet {
 	private CatalogoDeUsuarios cu;
 	private CatalogoDeComunicadores cc;
 	private CatalogoDeCategorias ccat;
-	protected static String DIRECCION_IMGS;
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -126,8 +125,8 @@ public class ControladorLogin extends HttpServlet {
 			String repeticion_clave = request.getParameter("repeticionClave");
 			String imagen = request.getParameter("imagen_usuario");			
 			String formato = imagen.split("[.]+")[1];			
-			String myStorageFolder= "/imgs"; // this is folder name in where I want to store files. 
-			DIRECCION_IMGS = request.getServletContext().getRealPath(myStorageFolder);
+			String myStorageFolder= "/imgs/"; // this is folder name in where I want to store files. 
+			String DIRECCION_IMGS = request.getServletContext().getRealPath(myStorageFolder);
 			String imagen_usuario = DIRECCION_IMGS + nombre_usuario + "." + formato;
 
 			ArrayList<Categoria> categorias;
