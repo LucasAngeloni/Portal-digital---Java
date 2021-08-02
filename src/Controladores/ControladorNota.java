@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import Logica.CatalogoDeHilos;
+import Logica.CatalogoDeHilos.NoExisteHiloException;
 import Logica.CatalogoDeNotas;
 import Logica.CatalogoDeNotas.LongitudMaximaException;
 import Logica.CatalogoDeUsuarios;
@@ -103,7 +104,7 @@ public class ControladorNota extends HttpServlet {
 			request.getSession().setAttribute("hilo_abierto", hilo);
 			request.setAttribute("Info", "La nota se ha modificado correctamente");
 		} 
-		catch (SQLException | LongitudMaximaException e) {
+		catch (SQLException | LongitudMaximaException | NoExisteHiloException e) {
 			request.setAttribute("Error", e.getMessage());
 		}
 		finally {
@@ -145,7 +146,7 @@ public class ControladorNota extends HttpServlet {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistaModificarNota.jsp");
 			dispatcher.forward(request, response);
 		}
-		catch (SQLException e) {
+		catch (SQLException | NumberFormatException | NoExisteHiloException e) {
 			request.setAttribute("Error", e.getMessage());
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistaHilo.jsp");
 			dispatcher.forward(request, response);
@@ -175,12 +176,12 @@ public class ControladorNota extends HttpServlet {
 
 				this.cn.insert(hilo.getIdHilo(), notas);
 				
-				request.setAttribute("hilo_abierto", hilo);
+				request.getSession().setAttribute("hilo_abierto", hilo);
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/vistaHilo.jsp");
 				dispatcher.forward(request, response);
 			}
 		} 
-		catch (SQLException | LongitudMaximaException e) {
+		catch (SQLException | LongitudMaximaException | NoExisteHiloException e) {
 			request.setAttribute("hilo_abierto", hilo);
 			request.setAttribute("Error", e.getMessage());
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistaHilo.jsp");
@@ -192,7 +193,7 @@ public class ControladorNota extends HttpServlet {
 		
 		Hilo hilo = null;
 		try {
-			if(request.getParameter("hilo") == null)
+			if(request.getParameter("id_hilo") == null)
 				hilo = (Hilo)request.getSession().getAttribute("hilo_abierto");
 			else
 				hilo = this.ch.getOne(Integer.parseInt(request.getParameter("id_hilo")));			
@@ -202,7 +203,7 @@ public class ControladorNota extends HttpServlet {
 
 			this.cn.modificarRelevanciaPublicacion(hilo,nota,usuario,-1);
 		}
-		catch (SQLException e) {
+		catch (SQLException | NumberFormatException | NoExisteHiloException e) {
 			request.setAttribute("Error", e.getMessage());
 		}
 		finally {
@@ -216,7 +217,7 @@ public class ControladorNota extends HttpServlet {
 		
 		Hilo hilo = null;
 		try {
-			if(request.getParameter("hilo") == null)
+			if(request.getParameter("id_hilo") == null)
 				hilo = (Hilo)request.getSession().getAttribute("hilo_abierto");
 			else
 				hilo = this.ch.getOne(Integer.parseInt(request.getParameter("id_hilo")));			
@@ -227,7 +228,7 @@ public class ControladorNota extends HttpServlet {
 			this.cn.modificarRelevanciaPublicacion(hilo,nota,usuario,1);
 			this.cu.updatePreferencias(usuario,request.getParameter("instruccion"), hilo.getCategorias());
 		}
-		catch (SQLException e) {
+		catch (SQLException | NoExisteHiloException e) {
 			request.setAttribute("Error", e.getMessage());
 		}
 		finally {

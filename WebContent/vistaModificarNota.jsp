@@ -36,6 +36,7 @@
 						    <c:when test="${hilo_abierto.getIdNota(nota) != 1}">  
 						       <!-- BLOQUE NOTAS -->
 								<c:set var="nota" value="${nota }" scope="request"/>
+								<c:set var="comunicador" value="${hilo.getComunicador() }" scope="request" />
 								<div class="nota-container">
 									<jsp:include page="vistaNota.jsp"></jsp:include>
 								</div>

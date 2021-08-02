@@ -127,9 +127,9 @@ public class ComentarioData{
 			Comentario comentarioActual;
 			while(resultSet.next()) {
 				
-				comentarioActual = new Comentario(ud.getOne(resultSet.getString("nombre_usuario")),aporte);
+				LocalDateTime fecha_comentario = resultSet.getTimestamp("fecha_comentario").toLocalDateTime();
+				comentarioActual = new Comentario(ud.getOne(resultSet.getString("nombre_usuario")),aporte, fecha_comentario);
 				comentarioActual.setDescripcionComentario(resultSet.getString("desc_comentario"));
-				comentarioActual.setFechaComentario(resultSet.getTimestamp("fecha_comentario").toLocalDateTime());
 				comentarioActual.setLikes(resultSet.getInt("likes"));
 				comentarioActual.setSubcomentarios(this.getSubcomentarios(comentarioActual));
 				//comentarioActual.setNroSubcomentarios(this.getNroSubcomentarios(resultSet.getTimestamp("fecha_comentario"), 
@@ -217,8 +217,9 @@ public class ComentarioData{
 				subcomentarioActual.setDescripcionComentario(resultSet.getString("desc_comentario"));
 				subcomentarioActual.setFechaComentario(resultSet.getTimestamp("fecha_comentario").toLocalDateTime());
 				subcomentarioActual.setLikes(resultSet.getInt("likes"));
-				subcomentarioActual.setNroSubcomentarios(this.getNroSubcomentarios(resultSet.getTimestamp("fecha_comentario"), 
-						resultSet.getString("nombre_usuario")));
+				subcomentarioActual.setSubcomentarios(this.getSubcomentarios(subcomentarioActual));
+				//subcomentarioActual.setNroSubcomentarios(this.getNroSubcomentarios(resultSet.getTimestamp("fecha_comentario"), 
+					//	resultSet.getString("nombre_usuario")));
 				
 				subcomentarios.add(subcomentarioActual);
 			}

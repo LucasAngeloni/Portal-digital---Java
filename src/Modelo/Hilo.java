@@ -14,9 +14,9 @@ public class Hilo {
 	private Comunicador comunicador;
 	private ArrayList<Categoria> categorias;
 	
-	public Hilo(String titulo, String nombreUsuario) {
+	public Hilo(String titulo, Comunicador usuario) {
 		
-		this.comunicador = new Comunicador(nombreUsuario);
+		this.comunicador = usuario;
 		this.titulo = titulo;
 		relevanciaHilo = 0;
 		aportes = new ArrayList<Aporte>();

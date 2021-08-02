@@ -43,7 +43,7 @@
 
 					<c:forEach var="nota" items="${hilo_abierto.getNotas()}">
 						<c:choose>
-							<c:when test="${hilo.getIdNota(nota) != 1}">
+							<c:when test="${hilo_abierto.getIdNota(nota) != 1}">
 								<!-- BLOQUE NOTAS -->
 								<c:set var="nota" value="${nota }" scope="request" />
 								<c:set var="comunicador" value="${hilo.getComunicador() }" scope="request" />
@@ -55,7 +55,6 @@
 								<jsp:include page="vistaNotaPrincipal.jsp"></jsp:include>
 							</c:otherwise>
 						</c:choose>
-
 					</c:forEach>
 				</div>
 				<!-- FIN BLOQUE DEL HILO -->
@@ -67,7 +66,7 @@
 			</div>
 			<c:set var="COMENTARIOS" value="${hilo_abierto.getComentarios()}"
 				scope="request" />
-			<c:set var="publicacion" value="${nota}" scope="request" />
+			<c:set var="publicacion" value="${hilo_abierto.getNota(1)}" scope="request" />
 			<jsp:include page="vistaComentarios.jsp"></jsp:include>
 		</div>
 	</div>

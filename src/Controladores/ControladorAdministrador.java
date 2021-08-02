@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import Logica.CatalogoDeCategorias;
 import Logica.CatalogoDeComentarios;
 import Logica.CatalogoDeHilos;
+import Logica.CatalogoDeHilos.NoExisteHiloException;
 import Logica.CatalogoDeNotas;
 import Logica.CatalogoDeUsuarios;
 import Modelo.Usuario;
@@ -133,7 +134,7 @@ public class ControladorAdministrador extends HttpServlet {
 			this.cn.delete(hilo, nota);
 			
 			request.setAttribute("Info", "Se ha borrado la nota correctamente");
-		} catch (SQLException e) {
+		} catch (SQLException | NoExisteHiloException e) {
 			request.setAttribute("Error", e.getMessage());
 		}
 		finally {
@@ -152,7 +153,7 @@ public class ControladorAdministrador extends HttpServlet {
 			
 			request.setAttribute("hilo", hilo);
 			request.setAttribute("notas", hilo.getNotas());
-		} catch (SQLException e) {
+		} catch (SQLException | NoExisteHiloException e) {
 			request.setAttribute("Error", e.getMessage());
 		}
 		finally {

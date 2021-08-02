@@ -1,6 +1,7 @@
 package Modelo;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Comentario {
@@ -14,9 +15,13 @@ public class Comentario {
 	private Usuario usuarioCreador;
 	private Publicacion publicacion;
 	
-	public Comentario(Usuario usuario,LocalDateTime fecha,Comentario comentario_padre) {
+	public Comentario(Usuario usuario, LocalDateTime fecha,Comentario comentario_padre) {
 		this.usuarioCreador = usuario;
-		this.fechaComentario = fecha;
+		
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String fecha_texto = fecha.format(formatter);
+		this.fechaComentario = LocalDateTime.parse(fecha_texto, formatter);
+		
 		this.likes = 0;
 		this.comentarioPrincipal = comentario_padre;
 		this.setSubcomentarios(new ArrayList<Comentario>());
@@ -25,7 +30,12 @@ public class Comentario {
 	public Comentario(Usuario usuario, Nota nota) {
 		this.usuarioCreador = usuario;
 		this.publicacion = nota;		
-		this.fechaComentario = LocalDateTime.now();
+		
+		LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String fecha_texto = now.format(formatter);
+		this.fechaComentario = LocalDateTime.parse(fecha_texto, formatter);
+		
 		this.likes = 0;
 		this.comentarioPrincipal = null;
 		this.setSubcomentarios(new ArrayList<Comentario>());
@@ -34,12 +44,23 @@ public class Comentario {
 	public Comentario(Usuario usuario, Aporte aporte) {
 		this.usuarioCreador = usuario;
 		this.publicacion = aporte;		
-		this.fechaComentario = LocalDateTime.now();
+
+		LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String fecha_texto = now.format(formatter);
+		this.fechaComentario = LocalDateTime.parse(fecha_texto, formatter);
+		
 		this.likes = 0;
 		this.comentarioPrincipal = null;
 		this.setSubcomentarios(new ArrayList<Comentario>());
 	}
 	
+	public Comentario(Usuario usuario, Aporte aporte, LocalDateTime fecha_comentario) {
+		this.usuarioCreador = usuario;
+		this.publicacion = aporte;		
+		this.fechaComentario = fecha_comentario;
+	}
+
 	public String getDescripcionComentario() {
 		return descripcionComentario;
 	}
@@ -85,14 +106,18 @@ public class Comentario {
 		return this.usuarioCreador;
 	}
 	
-	public LocalDateTime getFechaNota() {	
-		return this.publicacion.getFechaPublicacion();
+	public LocalDateTime getFechaNota() {
+		if(this.comentarioPrincipal != null)
+			return this.comentarioPrincipal.getFechaNota();
+		else
+		    return this.publicacion.getFechaPublicacion();
 	}
 	
 	public int getIdHilo() {
 		if(this.comentarioPrincipal != null)
 			return this.comentarioPrincipal.getIdHilo();
-		return this.publicacion.getIdHilo();
+		else
+		    return this.publicacion.getIdHilo();
 	}
 	
 	public Publicacion getPublicacion() {
@@ -162,5 +187,35 @@ public class Comentario {
 	public void setSubcomentarios(ArrayList<Comentario> subcomentarios) {
 		this.subcomentarios = subcomentarios;
 		this.nroSubcomentarios = subcomentarios.size();
+	}
+
+	public Comentario buscarSubcomentario(String nombre_usuario, LocalDateTime fecha_comentario) {
+		
+		for(Comentario subcomentario : this.subcomentarios) {
+			if(subcomentario.getNombreUsuario().equals(nombre_usuario) && subcomentario.getFechaComentario().equals(fecha_comentario))
+				return subcomentario;
+		}
+		for(Comentario subcomentario : this.subcomentarios) {
+			Comentario subcom = subcomentario.buscarSubcomentario(nombre_usuario, fecha_comentario);
+			if(subcom != null)
+				return subcom;
+		}
+		return null;
+	}
+
+	public boolean eliminarSubcomentario(LocalDateTime fecha_comentario, String nombre_usuario) {
+		
+		for(Comentario subcomentario : this.subcomentarios) {
+			if(subcomentario.getNombreUsuario().equals(nombre_usuario) && subcomentario.getFechaComentario().equals(fecha_comentario)) {
+				this.subcomentarios.remove(subcomentario);
+				this.nroSubcomentarios--;
+				return true;
+			}
+		}
+		for(Comentario subcomentario : this.subcomentarios) {
+			subcomentario.eliminarSubcomentario(fecha_comentario, nombre_usuario);
+		}
+		return false;
+		
 	}
 }

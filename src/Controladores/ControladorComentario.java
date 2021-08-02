@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import Logica.CatalogoDeComentarios;
 import Logica.CatalogoDeHilos;
+import Logica.CatalogoDeHilos.NoExisteHiloException;
 import Logica.CatalogoDeUsuarios;
 import Modelo.Aporte;
 import Modelo.Comentario;
@@ -135,7 +136,7 @@ public class ControladorComentario extends HttpServlet {
 		
 		String str = request.getParameter("fecha_comentario");
 		LocalDateTime fecha_comentario = LocalDateTime.parse(str);
-		
+		System.out.println(fecha_comentario);
 		Publicacion publicacion;
 		String comunicador = request.getParameter("usuario_aporte");
 		if(comunicador == null) {
@@ -163,10 +164,10 @@ public class ControladorComentario extends HttpServlet {
 
 	private void responder(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		Usuario usuario = (Usuario)request.getSession().getAttribute("usuario");
 		Comentario comentarioPrincipal = this.buscarComentario(request, response);
 		
 		String texto_comentario = request.getParameter("comentario");
-		Usuario usuario = (Usuario)request.getSession().getAttribute("usuario");
 		Comentario comentario = new Comentario(usuario,LocalDateTime.now(),comentarioPrincipal);
 		comentario.setDescripcionComentario(texto_comentario);
 		try {
@@ -238,7 +239,7 @@ public class ControladorComentario extends HttpServlet {
 			
 			request.getSession().setAttribute("hilo_abierto", hilo);
 			
-		} catch (SQLException e) {
+		} catch (SQLException | NumberFormatException | NoExisteHiloException e) {
 			request.setAttribute("Error", e.getMessage());
 		}
 		finally {
@@ -314,12 +315,12 @@ public class ControladorComentario extends HttpServlet {
 			comentario = aporte.getComentario(nombre_usuario, fecha_comentario);
 			request.setAttribute("publicacion", aporte);
 		}
-		if(comentario == null)
+		/*if(comentario == null)
 			try {
 				comentario = this.cco.getOne(fecha_comentario, nombre_usuario);
 			} catch (SQLException e) {
 				request.setAttribute("Error", e.getMessage());
-			}
+			}*/
 		return comentario;
 	}
 

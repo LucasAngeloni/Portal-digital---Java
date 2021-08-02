@@ -11,12 +11,12 @@
 </c:url>
 <c:url var="linkRelevarNota" value="ControladorNota">
 	<c:param name="instruccion" value="relevar_nota"></c:param>
-	<c:param name="hilo" value="${hilo.getIdHilo()}"></c:param>
+	<c:param name="id_hilo" value="${hilo.getIdHilo()}"></c:param>
 	<c:param name="fecha_publicacion" value="${notaPrincipal.getFechaPublicacion() }"></c:param>
 </c:url>
 <c:url var="linkQuitarRelevancia" value="ControladorNota">
 	<c:param name="instruccion" value="quitar_relevancia"></c:param>
-	<c:param name="hilo" value="${hilo.getIdHilo()}"></c:param>
+	<c:param name="id_hilo" value="${hilo.getIdHilo()}"></c:param>
 	<c:param name="fecha_publicacion" value="${notaPrincipal.getFechaPublicacion() }"></c:param>
 </c:url>
 <c:url var="linkGuardarHilo" value="ControladorHilo">
@@ -142,7 +142,7 @@
 						<form class="form" id="formDescripcion" name="formDescripcion"
 							method="get" action="ControladorNota" accept-charset="utf-8">
 							<input type="hidden" name="instruccion" value="modificar_nota">
-							<input type="hidden" name="fecha_publicacion" value="${nota.getFechaPublicacion() }">
+							<input type="hidden" name="fecha_publicacion" value="${notaPrincipal.getFechaPublicacion() }">
 							<input type="hidden" name="id_hilo" value="${hilo.getIdHilo() }">
 
 							<div class="row input-group mb-3 ">

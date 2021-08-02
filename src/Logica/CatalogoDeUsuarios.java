@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import Controladores.ControladorLogin;
 import Datos.EsUsuarioAdministradorException;
 import Datos.PreferenciasData;
 import Datos.UsuarioData;

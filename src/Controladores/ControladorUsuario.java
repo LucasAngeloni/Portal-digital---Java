@@ -2,6 +2,8 @@ package Controladores;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -165,27 +167,29 @@ public class ControladorUsuario extends HttpServlet {
 		String telefono = request.getParameter("telefono");
 		String fecha_nacimiento = request.getParameter("fecha_nacimiento");
 		
-		Usuario usuario = (Usuario)request.getSession().getAttribute("usuario");
-		Usuario usuarioModificado = new Usuario(usuario.getNombreUsuario());
-		
-		usuarioModificado.setContraseña(usuario.getContraseña());
-		usuarioModificado.setComentariosQueLeGustan(usuario.getComentariosQueLeGustan());
-		usuarioModificado.setHilosGuardados(usuario.getHilosGuardados());
-		usuarioModificado.setImagen(usuario.getImagen());
-		usuarioModificado.setNotasRelevantes(usuario.getNotasRelevantes());
-		usuarioModificado.setPreferencias(usuario.getPreferencias());
+		String tipo_usuario = (String) request.getSession().getAttribute("tipo_usuario");
+		Usuario usuarioModificado;
+		if(tipo_usuario == "lector")
+			usuarioModificado = (Usuario) request.getSession().getAttribute("usuario");
+		else
+			usuarioModificado = (Comunicador)request.getSession().getAttribute("usuario");
 		
 		usuarioModificado.setEmail(email);
 		usuarioModificado.setTelefono(telefono);
-		usuarioModificado.setFechaNacimiento(fecha_nacimiento);
 		usuarioModificado.setState(States.MODIFIED);
 		try {
+			usuarioModificado.setFechaNacimiento(LocalDate.parse(fecha_nacimiento));
 			this.cu.save(usuarioModificado);
+			
 			request.getSession().setAttribute("usuario",usuarioModificado);
+			
 			request.setAttribute("Info","Datos modificados");
 		}
 		catch (SQLException | ExcepcionCampos e) {
 			request.setAttribute("Error",e.getMessage());
+		}
+		catch(DateTimeParseException e) {
+			request.setAttribute("Error","El formato de la fecha de nacimiento no es válido");
 		}
 		finally {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/perfil.jsp");

@@ -1,6 +1,7 @@
 package Modelo;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public abstract class Publicacion extends BusinessEntity{
@@ -17,14 +18,22 @@ public abstract class Publicacion extends BusinessEntity{
 		this.relevancia = 0;
 		this.comentarios = new ArrayList<Comentario>();
 		this.descripcion = descripcion;
-		this.fechaPublicacion = LocalDateTime.now();
+		
+		LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String fecha_texto = now.format(formatter);
+		this.fechaPublicacion = LocalDateTime.parse(fecha_texto, formatter);
 	}
 	
 	public Publicacion(String descripcion) {
 		this.relevancia = 0;
 		this.comentarios = new ArrayList<Comentario>();
 		this.descripcion = descripcion;
-		this.fechaPublicacion = LocalDateTime.now();
+		
+		LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String fecha_texto = now.format(formatter);
+		this.fechaPublicacion = LocalDateTime.parse(fecha_texto, formatter);
 	}
 	
 	public Publicacion(int hilo, LocalDateTime fecha_publicacion) {
@@ -44,7 +53,7 @@ public abstract class Publicacion extends BusinessEntity{
 		return this.comentarios.size();
 	}
 	public LocalDateTime getFechaPublicacion() {
-		return fechaPublicacion;
+		return this.fechaPublicacion;
 	}
 	public void setFechaPublicacion(LocalDateTime fechaPublicacion) {
 		this.fechaPublicacion = fechaPublicacion;
@@ -84,11 +93,20 @@ public abstract class Publicacion extends BusinessEntity{
 				break;
 			}
 		}
+		for(Comentario comentario : this.comentarios) {
+			if(comentario.eliminarSubcomentario(fecha_comentario, usuario))
+				break;
+		}
 	}
 	public Comentario getComentario(String nombre_usuario, LocalDateTime fecha_comentario) {
 		for(Comentario com : this.comentarios) {
 			if(com.getNombreUsuario().equals(nombre_usuario) && com.getFechaComentario().equals(fecha_comentario))
 				return com;
+		}
+		for(Comentario com : this.comentarios) {
+			Comentario subcom = com.buscarSubcomentario(nombre_usuario,fecha_comentario);
+			if(subcom != null)
+				return subcom;
 		}
 		return null;
 	}

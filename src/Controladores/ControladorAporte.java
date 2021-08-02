@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import Logica.CatalogoDeAportes;
 import Logica.CatalogoDeAportes.LongitudMaximaException;
 import Logica.CatalogoDeHilos;
+import Logica.CatalogoDeHilos.NoExisteHiloException;
 import Logica.CatalogoDeUsuarios;
 import Modelo.Aporte;
 import Modelo.Comunicador;
@@ -235,7 +236,7 @@ public class ControladorAporte extends HttpServlet {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistaAportesNoModal.jsp");
 			dispatcher.forward(request, response);
 		}
-		catch (SQLException e) {
+		catch (SQLException | NoExisteHiloException e) {
 			request.setAttribute("Error", "ERROR al intentar cargar los aportes");
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistaPrincipal.jsp");
 			dispatcher.forward(request, response);

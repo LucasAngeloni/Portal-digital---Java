@@ -96,9 +96,13 @@ public class CatalogoDeHilos {
 		
 	}
 	
-	public Hilo getOne(int id_hilo) throws SQLException {
+	public Hilo getOne(int id_hilo) throws SQLException, NoExisteHiloException {
 		try {
-			return hiloData.getOne(id_hilo);
+			Hilo hilo = hiloData.getOne(id_hilo);
+			if(hilo == null)
+				throw new NoExisteHiloException("Este hilo ya no existe");
+			else
+				return hilo; 
 		} catch (SQLException e) {
 			throw new SQLException("Error de conexión");
 		}		
@@ -127,6 +131,14 @@ public class CatalogoDeHilos {
 			hilo.getComunicador().removeHilo(hilo);
 		} catch (SQLException e) {
 			throw new SQLException("ERROR. No se pudo eliminar el hilo");
+		}
+	}
+	
+	public class NoExisteHiloException extends Exception{
+		private static final long serialVersionUID = 1L;
+
+		public NoExisteHiloException(String msg) {
+			super(msg);
 		}
 	}
 }

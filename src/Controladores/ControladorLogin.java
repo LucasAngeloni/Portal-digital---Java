@@ -194,11 +194,14 @@ public class ControladorLogin extends HttpServlet {
 			else {
 				HttpSession session = request.getSession();
 				
-				if(comunicador.getNombre() == null) 
+				if(comunicador.getNombre() == null) {
+					session.setAttribute("tipo_usuario", "lector");
 				    session.setAttribute("usuario", comunicador.castUsuario());
-				else
+				}
+				else {
+					session.setAttribute("tipo_usuario", "comunicador");
 					session.setAttribute("usuario", comunicador);
-				
+				}			
 				RequestDispatcher dispatcher = request.getRequestDispatcher("ControladorVistaPrincipal");
 				dispatcher.forward(request, response);	
 			}

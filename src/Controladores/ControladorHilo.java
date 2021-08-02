@@ -14,8 +14,10 @@ import javax.servlet.http.HttpSession;
 
 import Logica.CatalogoDeHilos;
 import Logica.CatalogoDeHilos.LongitudMaximaException;
+import Logica.CatalogoDeHilos.NoExisteHiloException;
 import Logica.CatalogoDeUsuarios;
 import Modelo.Categoria;
+import Modelo.Comunicador;
 import Modelo.Hilo;
 import Modelo.Nota;
 import Modelo.Usuario;
@@ -88,7 +90,7 @@ public class ControladorHilo extends HttpServlet {
 			this.ch.update(hilo_a_editar);
 			request.getSession().setAttribute("hilo_abierto", hilo_a_editar);
 			
-		} catch (SQLException | LongitudMaximaException e) {
+		} catch (SQLException | LongitudMaximaException | NoExisteHiloException e) {
 			request.setAttribute("Error", e.getMessage());
 		}
 		finally {
@@ -106,7 +108,7 @@ public class ControladorHilo extends HttpServlet {
 			
 			request.setAttribute("Info", "El hilo se ha eliminado correctamente");
 		} 
-		catch (NumberFormatException | SQLException e) {
+		catch (NumberFormatException | SQLException | NoExisteHiloException e) {
 			request.setAttribute("Error", e.getMessage());
 		} finally {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("ControladorVistaPrincipal");
@@ -118,9 +120,9 @@ public class ControladorHilo extends HttpServlet {
 		String titulo = request.getParameter("titulo");
 		String descripcion = request.getParameter("descripcion");
 		String categoria = request.getParameter("categoria");
-		Usuario comunicador = (Usuario)request.getSession().getAttribute("usuario");
+		Comunicador comunicador = (Comunicador)request.getSession().getAttribute("usuario");
 				
-        Hilo hiloNuevo = new Hilo(titulo,comunicador.getNombreUsuario());
+        Hilo hiloNuevo = new Hilo(titulo,comunicador);
 		hiloNuevo.addNota(new Nota(descripcion));
 		
 		@SuppressWarnings("unchecked")
@@ -158,7 +160,7 @@ public class ControladorHilo extends HttpServlet {
 			catch(NullPointerException e) {	}
 			session.setAttribute("hilo_abierto", hilo);
 		}
-		catch (SQLException e) {
+		catch (SQLException | NoExisteHiloException e) {
 			session.removeAttribute("hilo_abierto");
 			request.setAttribute("Error", e.getMessage());
 		}
@@ -172,14 +174,14 @@ public class ControladorHilo extends HttpServlet {
 		
 		try {
 			int id_hilo = Integer.parseInt(request.getParameter("id_hilo"));
-			Hilo hilo = ch.getOne(id_hilo);
+			Hilo hilo = this.ch.getOne(id_hilo);
 			Usuario usuario = (Usuario)request.getSession().getAttribute("usuario");
 			this.cu.desguardarHilo(hilo, usuario);
 			
 			request.setAttribute("DATOSHILOS", usuario.getHilosGuardados());
 			request.setAttribute("Info", "Se ha quitado el hilo");
 		} 
-		catch (SQLException e) {
+		catch (SQLException | NoExisteHiloException e) {
 			request.setAttribute("Error", e.getMessage());
 		}
 		finally {
@@ -199,7 +201,7 @@ public class ControladorHilo extends HttpServlet {
 			request.setAttribute("DATOSHILOS", usuario.getHilosGuardados());
 			request.setAttribute("Info", "Se ha guardado el hilo");
 		}
-		catch (SQLException e) {
+		catch (SQLException | NoExisteHiloException e) {
 			request.setAttribute("Error", e.getMessage());
 		}
 		finally {

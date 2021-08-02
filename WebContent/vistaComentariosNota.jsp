@@ -25,11 +25,21 @@
 			
 			<c:set var="hilo" value="${hilo_abierto}" scope="request" />
 			<c:if test="${publicacion.getClass().toString().equals('class Modelo.Nota') }">
-				<div class="nota-container">
-					<c:set var="comunicador" value="${hilo.getComunicador() }" scope="request" />
-					<c:set var="nota" value="${publicacion}" scope="request" />
-					<jsp:include page="vistaNota.jsp"></jsp:include>
-				</div>
+				<c:choose>
+					<c:when test="${hilo_abierto.getIdNota(publicacion) != 1}">
+						<!-- BLOQUE NOTAS -->
+						<c:set var="nota" value="${publicacion }" scope="request" />
+						<c:set var="comunicador" value="${hilo.getComunicador() }"
+							scope="request" />
+						<jsp:include page="vistaNota.jsp"></jsp:include>
+
+						<!-- FIN BLOQUE DEL NOTA -->
+					</c:when>
+					<c:otherwise>
+						<jsp:include page="vistaNotaPrincipal.jsp"></jsp:include>
+					</c:otherwise>
+				</c:choose>
+				
 			</c:if>
 			<c:if test="${publicacion.getClass().toString().equals('class Modelo.Aporte')}">
 				<div class="nota-container">

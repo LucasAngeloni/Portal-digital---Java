@@ -9,6 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/styles-hilo.css">
     <link rel="stylesheet" href="css/styles.css">
 	<title>Agregar nota</title>
 </head>
@@ -18,9 +19,9 @@
 			<jsp:include page="menu.jsp"></jsp:include>
 			<!-- MENU DE OPCIONES -->
 		</header>
-		<div class="col-7 medium-col">
+		<div class="col-8 medium-col">
 			<div class="row medium-top">
-				<h3>Hilo ${hilo_abierto.getIdHilo() }</h3>
+				<h3>Hilo</h3>
 			</div>
 
 			<div class="row">
@@ -33,6 +34,7 @@
 						       <!-- BLOQUE NOTAS -->
 								<hr>
 								<c:set var="nota" value="${nota }" scope="request"/>
+								<c:set var="comunicador" value="${hilo_abierto.getComunicador() }" scope="request" />
 								<div class="nota-container">
 									<jsp:include page="vistaNota.jsp"></jsp:include>
 								</div>
