@@ -9,6 +9,7 @@ import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -16,6 +17,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import Logica.CatalogoDeCategorias;
 import Logica.CatalogoDeComentarios;
@@ -72,9 +74,11 @@ public class ControladorAdministrador extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		HttpSession session = request.getSession();
+		
 		String comando = request.getParameter("instruccion");
-		if(comando == null)
-			comando = "usuarios";
+		if(comando == null || session.getAttribute("admin") == null)
+			comando = "cerrar_sesion";
 		
 		switch(comando) {
 		
@@ -117,30 +121,80 @@ public class ControladorAdministrador extends HttpServlet {
 		case "eliminar_nota":
 			this.eliminarNota(request, response);
 			break;
+		case "eliminar_hilo":
+			this.eliminarHilo(request, response);
+			break;
+		case "cerrar_sesion":
+			this.cerrarSesion(request, response);
+			break;
 		default:
 			break;
 		}
 	}
 	
+	private void eliminarHilo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		int id_hilo = Integer.parseInt(request.getParameter("id_hilo"));
+		ArrayList<Hilo> hilos = (ArrayList<Hilo>) request.getSession().getAttribute("hilos");
+		try {
+			this.ch.deleteHilo(id_hilo);
+			
+			for(Hilo hilo : hilos) {
+				if(hilo.getIdHilo() == id_hilo) {
+					hilos.remove(hilo);
+					break;
+				}
+			}
+			request.setAttribute("Info", "Se ha borrado el hilo correctamente");
+		} catch (SQLException e) {
+			request.setAttribute("Error", e.getMessage());
+		}
+		finally {
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistaHilosAdministrador.jsp");
+			dispatcher.forward(request, response);
+		}
+		
+	}
+
 	private void eliminarNota(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		int id_hilo = Integer.parseInt(request.getParameter("id_hilo"));
 		LocalDateTime fecha_nota = LocalDateTime.parse(request.getParameter("fecha_nota"));
+		ArrayList<Hilo> hilos = (ArrayList<Hilo>) request.getSession().getAttribute("hilos");
 		
-		Hilo hilo = null;
+		Hilo hilo_seleccionado = null;
+		for(Hilo hilo : hilos) {
+			if(hilo.getIdHilo() == id_hilo) {
+				hilo_seleccionado = hilo;
+				break;
+			}
+		}
+		String pagina_destino = "/vistaNotasAdministrador.jsp";
 		try {
-			hilo = this.ch.getOne(id_hilo);
-			Nota nota = hilo.getNota(fecha_nota);
-			this.cn.delete(hilo, nota);
-			
-			request.setAttribute("Info", "Se ha borrado la nota correctamente");
-		} catch (SQLException | NoExisteHiloException e) {
+			Nota nota = hilo_seleccionado.getNota(fecha_nota);
+			if(hilo_seleccionado.getIdNota(nota) == 1) {
+				this.ch.deleteHilo(id_hilo);
+				
+				for(Hilo hilo : hilos) {
+					if(hilo.getIdHilo() == id_hilo) {
+						hilos.remove(hilo);
+						break;
+					}
+				}
+				request.setAttribute("Info", "Se ha borrado el hilo correctamente");
+				pagina_destino = "/vistaHilosAdministrador.jsp";
+			}
+			else {
+				this.cn.delete(hilo_seleccionado, nota);
+				request.setAttribute("Info", "Se ha borrado la nota correctamente");
+			}
+		} catch (SQLException e) {
 			request.setAttribute("Error", e.getMessage());
 		}
 		finally {
-			request.setAttribute("hilo", hilo);
-			request.setAttribute("notas", hilo.getNotas());
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistaNotasAdministrador.jsp");
+			request.setAttribute("hilo", hilo_seleccionado);
+			request.setAttribute("notas", hilo_seleccionado.getNotas());
+			RequestDispatcher dispatcher = request.getRequestDispatcher(pagina_destino);
 			dispatcher.forward(request, response);
 		}
 	}
@@ -300,7 +354,7 @@ public class ControladorAdministrador extends HttpServlet {
 		String descripcion_categoria = request.getParameter("nombre_categoria");
 		String imagen = request.getParameter("imagen_categoria");			
 		String formato = imagen.split("[.]+")[1];	
-		String myStorageFolder= "/imgs/categorias"; // this is folder name in where I want to store files. 
+		String myStorageFolder= "/imgs/categorias/"; // this is folder name in where I want to store files. 
 		DIRECCION_IMGS = request.getServletContext().getRealPath(myStorageFolder); 
 		String imagen_categoria =  DIRECCION_IMGS + descripcion_categoria + "." + formato;
 		
@@ -402,17 +456,25 @@ public class ControladorAdministrador extends HttpServlet {
 		} finally {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistaUsuariosAdministrador.jsp");
 			dispatcher.forward(request, response);
-		}
+		}	
+	}
+	
+	private void cerrarSesion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		HttpSession session = request.getSession();
+		Enumeration<String> atributos = session.getAttributeNames();
+
+		while(atributos.hasMoreElements()) 
+			session.removeAttribute(atributos.nextElement());
+
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/login.jsp");
+		dispatcher.forward(request, response);
 	}
 
 	public static void copyFile(String origen, String destino) throws IOException {
 		
 		Path from = Paths.get(origen);
 		Path to = Paths.get(destino);
-		
-		System.out.println(origen);
-		System.out.println(destino);
 		
 		CopyOption[] options = new CopyOption[] {
 				StandardCopyOption.REPLACE_EXISTING,

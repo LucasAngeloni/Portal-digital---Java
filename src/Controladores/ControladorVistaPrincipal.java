@@ -125,11 +125,8 @@ public class ControladorVistaPrincipal extends HttpServlet {
 				this.indiceHilos += 1;
 			}
 			
-			if(request.getSession().getAttribute("Categorias") == null) {
-				ArrayList<Categoria> categorias = this.cc.getAll();
-				request.getSession().setAttribute("Categorias", categorias);
-			}
-			
+			ArrayList<Categoria> categorias = this.cc.getAll();
+			request.getSession().setAttribute("Categorias", categorias);			
 			request.setAttribute("hilos", hilosInicio);
 			
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistaPrincipal.jsp");

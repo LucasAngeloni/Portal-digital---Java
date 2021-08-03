@@ -136,7 +136,7 @@ public class ControladorComentario extends HttpServlet {
 		
 		String str = request.getParameter("fecha_comentario");
 		LocalDateTime fecha_comentario = LocalDateTime.parse(str);
-		System.out.println(fecha_comentario);
+		
 		Publicacion publicacion;
 		String comunicador = request.getParameter("usuario_aporte");
 		if(comunicador == null) {

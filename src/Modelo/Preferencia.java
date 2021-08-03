@@ -2,7 +2,7 @@ package Modelo;
 
 //Momentaneamente esta clase depende unicamente de la entidad Usuario y no de las categorias, por lo que se implementará como
 //parte de los usuarios
-public class Preferencia {
+public class Preferencia extends BusinessEntity{
 	
 	private Categoria categoria;
 	public Categoria getCategoria() {
@@ -30,6 +30,10 @@ public class Preferencia {
 	
 	public void modificarValorPreferencia(double variacion) {
 		this.valorPreferencia = this.valorPreferencia + variacion;
+	}
+
+	public void setValorPreferencia(double valor_preferencia) {
+		this.valorPreferencia = valor_preferencia;		
 	}
 
 }

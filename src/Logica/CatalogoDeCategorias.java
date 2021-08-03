@@ -44,13 +44,13 @@ public class CatalogoDeCategorias {
 	
 	public void delete(int id_categoria) throws SQLException {
 		try {			
-			UsuarioData ud = new UsuarioData();
+			/*UsuarioData ud = new UsuarioData();
 			
 			ArrayList<Usuario> usuarios = ud.getAll();
 			for(Usuario usuario : usuarios) {
 				usuario.removePreferencia(id_categoria);				
 				PreferenciasData.updatePreferencias(usuario.getPreferencias(), usuario.getNombreUsuario());
-			}
+			}*/
 			
 			this.categoriaData.delete(id_categoria);
 		} catch (SQLException e) {
@@ -62,7 +62,7 @@ public class CatalogoDeCategorias {
 		
 		try {
 			this.categoriaData.insert(categoria);
-			int cant_categorias = this.cantidadCategorias();
+			/*int cant_categorias = this.cantidadCategorias();
 			
 			UsuarioData ud = new UsuarioData();
 			PreferenciasData pd = new PreferenciasData();
@@ -76,7 +76,7 @@ public class CatalogoDeCategorias {
 				pd.insertPreferencias(preferencias, usuario.getNombreUsuario());
 				usuario.addPreferencia(preferenciaNueva);
 				PreferenciasData.updatePreferencias(usuario.getPreferencias(), usuario.getNombreUsuario());
-			}
+			}*/
 			
 		} catch (SQLException e) {
 			if(e.getErrorCode() == 0)

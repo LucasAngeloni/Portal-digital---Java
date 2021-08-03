@@ -17,6 +17,9 @@
 <c:url var="linkComentarios" value="ControladorAdministrador">
 	<c:param name="instruccion" value="comentarios"></c:param>
 </c:url>
+<c:url var="linkCerrarSesion" value="ControladorAdministrador">
+	<c:param name="instruccion" value="cerrar_sesion"></c:param>
+</c:url>
 
 <h1 class="logo">Portal</h1>
 
@@ -33,6 +36,9 @@
 				<li class="nav-item"><a class="nav-link"
 					href="${linkComentarios }">Comentarios</a></li>
 			</ul>
+			<a id="btnCerrarSesion" href="${linkCerrarSesion }"> <span
+				class="badge bg-secondary">Cerrar sesión</span>
+			</a>
 		</div>
 	</div>
 </nav>

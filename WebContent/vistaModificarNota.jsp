@@ -37,9 +37,9 @@
 						       <!-- BLOQUE NOTAS -->
 								<c:set var="nota" value="${nota }" scope="request"/>
 								<c:set var="comunicador" value="${hilo.getComunicador() }" scope="request" />
-								<div class="nota-container">
+								
 									<jsp:include page="vistaNota.jsp"></jsp:include>
-								</div>
+								
 								<br>
 								<!-- FIN BLOQUE DEL NOTA -->  
 						    </c:when>  

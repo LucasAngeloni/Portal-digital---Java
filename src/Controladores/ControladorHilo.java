@@ -139,7 +139,7 @@ public class ControladorHilo extends HttpServlet {
 			request.setAttribute("Info", "ÉXITO. Se ha subido el hilo correctamente");
 		} 
 		catch (SQLException | LongitudMaximaException | Logica.CatalogoDeNotas.LongitudMaximaException e) {
-			request.setAttribute("Info", e.getMessage());
+			request.setAttribute("Error", e.getMessage());
 		}
 		finally {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistaHilo.jsp");

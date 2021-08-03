@@ -18,6 +18,7 @@ import Modelo.Usuario;
 import Modelo.BusinessEntity.States;
 import Modelo.Categoria;
 import Modelo.Hilo;
+import Modelo.Preferencia;
 
 public class CatalogoDeUsuarios {
 	
@@ -201,6 +202,12 @@ public class CatalogoDeUsuarios {
 	}
 	
 	public void cerrarSesion(Usuario usuario) throws SQLException {
+		ArrayList<Preferencia> preferencias_nuevas = new ArrayList<Preferencia>();
+		for(Preferencia preferencia : usuario.getPreferencias()) {
+			if(preferencia.getState() == States.NEW)
+				preferencias_nuevas.add(preferencia);
+		}
+		PreferenciasData.insertPreferencias(preferencias_nuevas, usuario.getNombreUsuario());
 		PreferenciasData.updatePreferencias(usuario.getPreferencias(),usuario.getNombreUsuario());	
 	}
 	

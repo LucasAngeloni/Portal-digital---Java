@@ -26,6 +26,7 @@ public class Usuario extends BusinessEntity{
 	}
 	
 	public Usuario(String nombre_usuario, String telefono, LocalDate fecha_nacimiento, String email, String imagen) {
+		//Constructor para iniciar sesión
 		this.nombreUsuario = nombre_usuario;
 		this.telefono = telefono;
 		this.fechaNacimiento = fecha_nacimiento;
@@ -133,35 +134,47 @@ public class Usuario extends BusinessEntity{
 		this.preferencias = preferencias;
 	}
 	
-	public void addPreferencia(Preferencia preferenciaNueva) {
+	public void actualizarPreferencias(ArrayList<Categoria> categorias) {
 		
-		int cant_preferencias = this.preferencias.size();
-		double variacion;
+		double suma_preferencias = 0;
 		for(Preferencia preferencia : this.preferencias) {
-			variacion = -preferencia.getValorPreferencia()/(cant_preferencias+1);
-			preferencia.modificarValorPreferencia(variacion);
+			preferencia.setState(States.UNMODIFIED);
+			suma_preferencias += preferencia.getValorPreferencia();
 		}
-		this.preferencias.add(preferenciaNueva);
-	}
-	
-	public void removePreferencia(int id_categoria) {
-		
-		double variacion;
-		double valor_preferencia = 0;
-		
-		for(Preferencia preferencia : this.preferencias) {
-			if(preferencia.getIdCategoria() == id_categoria) {
-				valor_preferencia = preferencia.getValorPreferencia();
-				this.preferencias.remove(preferencia);
-				break;
+		if(categorias.size() != this.preferencias.size()) {
+			//En caso de que haya nuevas categorías estos valores no van a coincidir, no así en caso de que se hayan eliminado categorías
+			ArrayList<Categoria> categorias_nuevas = new ArrayList<Categoria>();
+			
+			double variacion = -1.0/(categorias.size()*this.preferencias.size());
+			for(Categoria categoria : categorias) {
+				boolean coincide = false;
+				for(Preferencia preferencia : this.preferencias) {
+					if(categoria.getIdCategoria() == preferencia.getIdCategoria()) {
+						preferencia.modificarValorPreferencia(variacion);
+						preferencia.setState(States.MODIFIED);
+						coincide = true;
+						break;
+					}
+				}
+				if(!coincide)
+					categorias_nuevas.add(categoria);
 			}
-		}		
-		for(Preferencia preferencia : this.preferencias) {
-			variacion = preferencia.getValorPreferencia()*valor_preferencia/(1-valor_preferencia);
-			preferencia.modificarValorPreferencia(variacion);
+			Preferencia preferencia_nueva;
+			for(Categoria categoria_nueva : categorias_nuevas) {
+				preferencia_nueva = new Preferencia(categoria_nueva, categorias.size());
+				this.preferencias.add(preferencia_nueva);
+			}
+
+		}
+		else if(suma_preferencias < 1.0 - 1.0/10000){
+			//Al ser eliminada alguna categoría, se elimina la preferencia y, por lo tanto, la suma de los valores
+			//de las preferencias resulta siempre menor a 1
+			for(Preferencia preferencia : this.preferencias) {
+				preferencia.setValorPreferencia(preferencia.getValorPreferencia()/suma_preferencias);
+				preferencia.setState(States.MODIFIED);
+			}
 		}
 	}
-	
 	public String getImagen() {
 		return imagen;
 	}

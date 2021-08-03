@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import Datos.HiloData;
+import Modelo.Categoria;
 import Modelo.Hilo;
 import Modelo.Usuario;
 
@@ -35,8 +36,14 @@ public class CatalogoDeHilos {
 		try {
 			if(usuario == null)
 				return EleccionHilosSinPreferencias.seleccionHilos(this.hiloData.getHilosRelevantes());
-			else
+			else {
+				CatalogoDeCategorias cc = new CatalogoDeCategorias();
+				
+				ArrayList<Categoria> categorias = cc.getAll();
+				usuario.actualizarPreferencias(categorias);
+				
 				return EleccionHilosPreferencias.seleccionHilos(this.hiloData.getHilosRelevantes(),usuario.getPreferencias());
+			}
 		}
 		catch(SQLException e) {
 			throw new SQLException("Error al cargar los hilos");
@@ -140,5 +147,15 @@ public class CatalogoDeHilos {
 		public NoExisteHiloException(String msg) {
 			super(msg);
 		}
+	}
+
+	public void deleteHilo(int id_hilo) throws SQLException {
+		
+		try {
+			this.hiloData.delete(id_hilo);
+		} catch (SQLException e) {
+			throw new SQLException("No se pudo eliminar el hilo");
+		}
+		
 	}
 }

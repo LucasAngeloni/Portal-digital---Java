@@ -77,7 +77,7 @@
 						<c:forEach var="comentario" items="${comentarios}">
 							<tr>
 								<th scope="row">${comentario.getNombreUsuario() }</th>
-								<td>${comentario.getFechaComentario().toLocalDate()}alas
+								<td>${comentario.getFechaComentario().toLocalDate()} a las
 									${comentario.getFechaComentario().toLocalTime() }</td>
 								<td>${comentario.getDescripcionComentario()}</td>
 								<td>${comentario.getLikes()}</td>

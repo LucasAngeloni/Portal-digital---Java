@@ -46,7 +46,7 @@ public class PreferenciasData {
 		return preferencias;
 	}
 	
-	public void insertPreferencias(ArrayList<Preferencia> preferencias, String nombre_usuario) throws SQLException {
+	public static void insertPreferencias(ArrayList<Preferencia> preferencias, String nombre_usuario) throws SQLException {
 		
 		PreparedStatement pst = null;
 		try {

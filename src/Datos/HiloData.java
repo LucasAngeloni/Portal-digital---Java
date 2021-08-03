@@ -379,9 +379,8 @@ public class HiloData{
 			
 			pst.executeUpdate();
 			keyResultSet = pst.getGeneratedKeys();
-            if(keyResultSet!=null && keyResultSet.next()){
+            if(keyResultSet!=null && keyResultSet.next())
                 hilo.setIdHilo(keyResultSet.getInt(1));
-            }
             
             String agregar_categoria = "insert into hilos_categorias values(?,?)";
             pst_categoria = conexion.prepareStatement(agregar_categoria);
@@ -394,14 +393,13 @@ public class HiloData{
             }
 		} 
 		catch (SQLException e) {
+			this.delete(hilo);
 			throw new SQLException(e);
 		}
 		finally {
 			try {
 				if(keyResultSet!=null) keyResultSet.close();
-				
 				if(pst!=null) pst.close();
-				
 				if(pst_categoria!=null) pst_categoria.close();
 				
 				FactoryConnection.getInstancia().closeConnection();
@@ -459,6 +457,30 @@ public class HiloData{
 		finally {
 			if(pst!=null) pst.close();
 			FactoryConnection.getInstancia().closeConnection();
+		}
+	}
+
+	public void delete(int id_hilo) throws SQLException {
+		
+		PreparedStatement pst = null;
+		try {
+			String borrar_hilo = "delete from hilos where id_hilo = ?";
+			pst = FactoryConnection.getInstancia().getConnection().prepareStatement(borrar_hilo);
+			pst.setInt(1,id_hilo);
+			
+			pst.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new SQLException(e);
+		}
+		finally {
+			try {
+				if(pst!=null) pst.close();
+				FactoryConnection.getInstancia().closeConnection();
+			} 
+			catch (SQLException e) {
+				throw new SQLException(e);
+			}
 		}
 	}
 }

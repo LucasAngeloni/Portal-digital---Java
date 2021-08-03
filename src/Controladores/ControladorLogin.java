@@ -182,6 +182,7 @@ public class ControladorLogin extends HttpServlet {
 		
 		String nombre_usuario = request.getParameter("nombreUsuario");
 		String clave = request.getParameter("clave");
+		HttpSession session = request.getSession();
 		
 		Comunicador comunicador;
 		try {
@@ -191,9 +192,7 @@ public class ControladorLogin extends HttpServlet {
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/login.jsp");
 				dispatcher.forward(request, response);
 			}
-			else {
-				HttpSession session = request.getSession();
-				
+			else {				
 				if(comunicador.getNombre() == null) {
 					session.setAttribute("tipo_usuario", "lector");
 				    session.setAttribute("usuario", comunicador.castUsuario());
@@ -212,6 +211,7 @@ public class ControladorLogin extends HttpServlet {
 			dispatcher.forward(request, response);
 		}
 		catch(EsUsuarioAdministradorException e) {
+			session.setAttribute("admin", true);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistaPrincipalAdministrador.jsp");
 			dispatcher.forward(request, response);
 		}

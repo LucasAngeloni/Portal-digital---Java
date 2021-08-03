@@ -75,8 +75,10 @@ public class EleccionHilosPreferencias extends EleccionHilos{
 			conteo = 0;
 			for(Preferencia preferencia : preferencias) {	
 				for(Categoria categoria : hilo.getCategorias()) {
-					if(categoria.getIdCategoria() == preferencia.getIdCategoria())
+					if(categoria.getIdCategoria() == preferencia.getIdCategoria()) {
 						preferencias_hilo += preferencias_estandarizadas.get(conteo);
+						break;
+					}
 				}
 			    conteo++;
 			}
@@ -86,8 +88,6 @@ public class EleccionHilosPreferencias extends EleccionHilos{
 			puntaje_hilo = funcionPuntuacion(tiempos_estandarizados.get(i), relevancias_estandarizadas.get(i),
 					aportes_estandarizados.get(i), comentarios_estandarizados.get(i), preferencias_hilo);
 			puntajes.put(i,puntaje_hilo);
-			//System.out.println(hilo.getIdHilo());
-			//System.out.println(puntaje_hilo);
 		}
 		return puntajes;
 	}
