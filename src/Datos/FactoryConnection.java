@@ -39,7 +39,7 @@ public class FactoryConnection {
 		try {
 		   if(con==null || con.isClosed()) {
 			   //con=DriverManager.getConnection(host+":"+port+"/"+db, user, password);
-			   con=DriverManager.getConnection(host2, user2, password2);
+			   con=DriverManager.getConnection(host, user, password);
 			   conectados=0;
 		   }
 		} 
