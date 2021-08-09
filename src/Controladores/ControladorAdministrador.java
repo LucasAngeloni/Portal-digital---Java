@@ -365,12 +365,14 @@ public class ControladorAdministrador extends HttpServlet {
 		String respuesta = null;
 		try {
 			this.cc.insert(categoria_nueva);
-			part.write(request.getServletContext().getRealPath(DIRECCION_IMGS) + File.separator + imagen);
+			part.write(DIRECCION_IMGS + imagen);
 			request.setAttribute("Info", "La categoría se agregó correctamente");
 		} catch (SQLException e) {
 			respuesta = e.getMessage();
 		} catch (ExcepcionImagen e) {
 			respuesta = e.getMessage();
+		} catch (IOException e) {
+			respuesta = e.getMessage() + "\nRuta: "+ request.getServletContext().getRealPath(DIRECCION_IMGS) + imagen;
 		}
 		finally {
 			request.setAttribute("Error", respuesta);
