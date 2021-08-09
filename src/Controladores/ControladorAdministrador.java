@@ -365,7 +365,6 @@ public class ControladorAdministrador extends HttpServlet {
 		String respuesta = null;
 		try {
 			this.cc.insert(categoria_nueva);
-			System.out.println(request.getServletContext().getRealPath(DIRECCION_IMGS) + File.separator + imagen);
 			part.write(request.getServletContext().getRealPath(DIRECCION_IMGS) + File.separator + imagen);
 			request.setAttribute("Info", "La categoría se agregó correctamente");
 		} catch (SQLException e) {
