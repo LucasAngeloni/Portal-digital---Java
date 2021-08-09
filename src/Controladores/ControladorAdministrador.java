@@ -341,7 +341,7 @@ public class ControladorAdministrador extends HttpServlet {
 			if(!imagen.equals(""))
 				part.write(request.getServletContext().getRealPath(DIRECCION_IMGS) + File.separator + imagen);
 			
-			request.setAttribute("Info", "La categoría se modificó correctamente");
+			request.setAttribute("Info", "La categorÃ­a se modificÃ³ correctamente");
 		} catch (SQLException | ExcepcionImagen e) {
 			respuesta = e.getMessage();
 			categoria_modificada.setDescripcionCategoria(descripcion_anterior);
@@ -365,8 +365,9 @@ public class ControladorAdministrador extends HttpServlet {
 		String respuesta = null;
 		try {
 			this.cc.insert(categoria_nueva);
+			System.out.println(request.getServletContext().getRealPath(DIRECCION_IMGS) + File.separator + imagen);
 			part.write(request.getServletContext().getRealPath(DIRECCION_IMGS) + File.separator + imagen);
-			request.setAttribute("Info", "La categoría se agregó correctamente");
+			request.setAttribute("Info", "La categorÃ­a se agregÃ³ correctamente");
 		} catch (SQLException e) {
 			respuesta = e.getMessage();
 		} catch (ExcepcionImagen e) {
