@@ -1,5 +1,6 @@
 package Controladores;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.nio.file.CopyOption;
@@ -13,11 +14,13 @@ import java.util.Enumeration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import Datos.EsUsuarioAdministradorException;
 import Logica.CatalogoDeCategorias;
@@ -32,12 +35,14 @@ import Modelo.Usuario;
  * Servlet implementation class ControladorLogin
  */
 @WebServlet("/ControladorLogin")
+@MultipartConfig
 public class ControladorLogin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	private CatalogoDeUsuarios cu;
 	private CatalogoDeComunicadores cc;
 	private CatalogoDeCategorias ccat;
+	protected static String DIRECCION_IMGS = "imgs\\usuarios\\";
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -123,11 +128,10 @@ public class ControladorLogin extends HttpServlet {
 		try {
 			String clave = request.getParameter("clave");
 			String repeticion_clave = request.getParameter("repeticionClave");
-			String imagen = request.getParameter("imagen_usuario");			
-			String formato = imagen.split("[.]+")[1];			
-			String myStorageFolder= "/imgs/"; // this is folder name in where I want to store files. 
-			String DIRECCION_IMGS = request.getServletContext().getRealPath(myStorageFolder);
-			String imagen_usuario = DIRECCION_IMGS + nombre_usuario + "." + formato;
+			Part part = request.getPart("imagen_usuario");		
+			String imagen = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+			//String imagen = request.getParameter("imagen_usuario");
+			String imagen_usuario = DIRECCION_IMGS + imagen;
 
 			ArrayList<Categoria> categorias;
 			categorias = this.ccat.getAll();
@@ -151,7 +155,7 @@ public class ControladorLogin extends HttpServlet {
 			else
 				this.cu.save(usuarioNuevo);
 			
-			copyFile(imagen,imagen_usuario);
+			part.write(request.getServletContext().getRealPath(DIRECCION_IMGS) + File.separator + imagen);
 			
 			HttpSession session = request.getSession();
 			session.setAttribute("usuario", usuarioNuevo);

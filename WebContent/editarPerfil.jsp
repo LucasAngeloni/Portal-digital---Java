@@ -28,8 +28,8 @@
 			</div>
 			<div class="row datos-principales">
 				<div class="col-5">
-					<form id="formCambiarImagen" name="formCambiarImagen" method="get"
-						action="ControladorUsuario">
+					<form id="formCambiarImagen" name="formCambiarImagen" method="post"
+						action="ControladorUsuario" enctype="multipart/form-data">
 						<input type="hidden" name="instruccion" value="cambiar_imagen">
 
 						<c:choose>

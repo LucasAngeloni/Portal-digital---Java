@@ -26,11 +26,10 @@ if(request.getParameter("imagen_categoria") != null) hayImagen = true;
 				<h3>Modificar categoría</h3>
 			</div>
 			<div class="col-6">
-				<form id="formModificar" name="formModiciar" method="get"
+				<form id="formModificar" name="formModificar" method="post"
 					action="ControladorAdministrador" enctype="multipart/form-data">
 					<input type="hidden" name="instruccion" value="modificar_categoria">
 					<input type="hidden" name="id_categoria" value="<%=request.getParameter("id_categoria") %>">
-					<input type="hidden" name="imagen_categoria_original" value="<%=request.getParameter("imagen_categoria") %>">
 
 					<div class="form-group row">
 						<label for="nombre_categoria" class="col-3 col-form-label">Nombre
@@ -53,7 +52,6 @@ if(request.getParameter("imagen_categoria") != null) hayImagen = true;
 						</c:otherwise>
 					</c:choose>
 					<div class="form-group row">
-						
 						<label for="imagen_categoria" class="col-4 col-form-label">Imagen
 							de la categoria</label> <input type="file" class="col-8"
 							name="imagen_categoria" accept=".jpg,.png,.jfif" value="<%=request.getParameter("imagen_categoria") %>" />

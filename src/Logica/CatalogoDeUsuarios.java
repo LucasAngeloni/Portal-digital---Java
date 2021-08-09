@@ -1,11 +1,6 @@
 package Logica;
 
 import java.io.IOException;
-import java.nio.file.CopyOption;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -91,9 +86,9 @@ public class CatalogoDeUsuarios {
 		}
 	}
 	
-	public void save(Usuario usuario) throws ExcepcionCampos, SQLException{
+	public void save(Usuario usuario) throws ExcepcionCampos, SQLException, IOException{
 		
-		if(usuario.getState() == States.NEW) 
+		if(usuario.getState() == States.NEW)
 			this.validarCampos(usuario);
 		if(usuario.getState() == States.MODIFIED)
 			this.validarFormatosDatos(usuario);
@@ -106,19 +101,19 @@ public class CatalogoDeUsuarios {
 				throw new SQLException("El nombre de usuario elegido ya existe");
 			else
 				throw new SQLException("Error de conexion");
+		} catch (IOException e) {
+			throw new IOException("Error al intentar guardar la imagen");
 		}
 	}
 
 	public void cambiarImagen(Usuario usuario, String imagen, String direccion_imgs) throws ExcepcionCampos, SQLException, IOException {
 		this.validarImagen(imagen);
-		String formato = imagen.split("[.]+")[1];
-		String imagen_usuario = direccion_imgs + usuario.getNombreUsuario() + "." + formato;
+		String imagen_usuario = direccion_imgs + imagen;
 		
 		usuario.setImagen(imagen_usuario);
 		usuario.setState(States.MODIFIED);
 		
 		this.save(usuario);
-		this.copyFile(imagen,imagen_usuario);
 	}
 	
 	private void validarImagen(String imagen) throws ExcepcionCampos {
@@ -138,6 +133,7 @@ public class CatalogoDeUsuarios {
 			throw new ExcepcionCampos("Se deben completar todos los campos");
 		
 		this.validarFormatosDatos(usuario);
+		this.validarImagen(usuario.getImagen());
 		this.validarClave(usuario.getContraseña());
 	}
 	
@@ -234,18 +230,5 @@ public class CatalogoDeUsuarios {
 		public ExcepcionCampos(String msg) {
 			super(msg);
 		}
-	}
-	
-	private void copyFile(String origen, String destino) throws IOException {
-		
-		Path from = Paths.get(origen);
-		Path to = Paths.get(destino);
-		
-		CopyOption[] options = new CopyOption[] {
-				StandardCopyOption.REPLACE_EXISTING,
-				StandardCopyOption.COPY_ATTRIBUTES
-		};
-		
-		Files.copy(from, to, options);
 	}
 }

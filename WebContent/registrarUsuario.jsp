@@ -37,7 +37,7 @@ else
 					<div class="alert alert-danger" role="alert">${Error }</div>
 				</c:if>
 
-				<form id="formRegistro" name="formRegistro" method="get"
+				<form id="formRegistro" name="formRegistro" method="post"
 					action="ControladorLogin" enctype="multipart/form-data">
 					<input type="hidden" name="instruccion" value="registrar_usuario">
 					<input type="hidden" name="tipo_usuario" value="<%=tipoUsuario%>">

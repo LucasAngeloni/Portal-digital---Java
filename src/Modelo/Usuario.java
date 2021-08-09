@@ -104,7 +104,7 @@ public class Usuario extends BusinessEntity{
 		return preferencias;
 	}
 	
-	public Categoria[] getCategoriasPreferidas(){
+	public ArrayList<Categoria> getCategoriasPreferidas(){
 		Preferencia[] mayoresPreferencias = new Preferencia[3];
 		
 		for(Preferencia preferencia : this.preferencias) {
@@ -123,10 +123,11 @@ public class Usuario extends BusinessEntity{
 				} 
 			}
 		}
-		Categoria[] categoriasPreferidas = {
-				mayoresPreferencias[0].getCategoria(),
-				mayoresPreferencias[1].getCategoria(),
-				mayoresPreferencias[2].getCategoria() };
+		ArrayList<Categoria> categoriasPreferidas = new ArrayList<Categoria>();
+		for(Preferencia preferencia : mayoresPreferencias) {
+			if(preferencia != null)
+				categoriasPreferidas.add(preferencia.getCategoria());
+		}
 		return categoriasPreferidas;
 	}
 	

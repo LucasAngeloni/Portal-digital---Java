@@ -11,21 +11,17 @@ public class EleccionHilosSinPreferencias extends EleccionHilos {
 	
 	public static ArrayList<Hilo> seleccionHilos(ArrayList<Hilo> hilos){
 		
-		CANTIDAD_A_SELECCIONAR = 30;
-		try {
+		ArrayList<Hilo> hilos_seleccionados = new ArrayList<Hilo>();
+		if(hilos.size() > 0) {
+			CANTIDAD_A_SELECCIONAR = 30;
 		    HashMap<Integer,Double> puntajes = valoracionesHilos(hilos);
 		
 		    Integer[] indices = rankingHilos(puntajes);
 		
-		    ArrayList<Hilo> hilos_seleccionados = new ArrayList<Hilo>();
 		    for(int i=0;i<CANTIDAD_A_SELECCIONAR;i++)
 			    hilos_seleccionados.add(hilos.get(indices[i]));
-		
-		    return hilos_seleccionados;
 		}
-		catch(IndexOutOfBoundsException e) {
-			return null;
-		}
+		return hilos_seleccionados;
 	}
 	
 	private static HashMap<Integer,Double> valoracionesHilos(ArrayList<Hilo> hilos){
@@ -60,9 +56,6 @@ public class EleccionHilosSinPreferencias extends EleccionHilos {
 			puntaje_hilo = funcionPuntuacion(tiempos_estandarizados.get(i), relevancias_estandarizadas.get(i),
 					aportes_estandarizados.get(i), comentarios_estandarizados.get(i));
 			puntajes.put(i,puntaje_hilo);
-			
-			//System.out.println(i);
-			//System.out.println(puntaje_hilo);
 		}
 		return puntajes;
 	}

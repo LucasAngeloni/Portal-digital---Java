@@ -1,11 +1,8 @@
 package Controladores;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.CopyOption;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,13 +10,16 @@ import java.util.Enumeration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import Logica.CatalogoDeCategorias;
+import Logica.CatalogoDeCategorias.ExcepcionImagen;
 import Logica.CatalogoDeComentarios;
 import Logica.CatalogoDeHilos;
 import Logica.CatalogoDeHilos.NoExisteHiloException;
@@ -36,6 +36,7 @@ import Modelo.Nota;
  * Servlet implementation class ControladorAdministrador
  */
 @WebServlet("/ControladorAdministrador")
+@MultipartConfig
 public class ControladorAdministrador extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -44,7 +45,7 @@ public class ControladorAdministrador extends HttpServlet {
 	private CatalogoDeCategorias cc;
 	private CatalogoDeComentarios cco;
 	private CatalogoDeNotas cn;
-	protected static String DIRECCION_IMGS; 
+	protected static String DIRECCION_IMGS = "imgs\\categorias\\"; 
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -313,61 +314,63 @@ public class ControladorAdministrador extends HttpServlet {
 
 	private void modificarCategoria(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		ArrayList<Categoria> categorias = (ArrayList<Categoria>) request.getSession().getAttribute("categorias"); 
 		String descripcion_categoria = request.getParameter("nombre_categoria");
-		String imagen = request.getParameter("imagen_categoria");
-		String imagen_categoria;
-		try {
-			String formato = imagen.split("[.]+")[1];
-			String myStorageFolder= "/imgs/categorias/"; // this is folder name in where I want to store files. 
-			DIRECCION_IMGS = request.getServletContext().getRealPath(myStorageFolder);
-			imagen_categoria =  DIRECCION_IMGS + descripcion_categoria + "." + formato;
-		}catch(ArrayIndexOutOfBoundsException e) {
-			imagen_categoria = request.getParameter("imagen_categoria_original"); 
-		}
 		
+		Part part = request.getPart("imagen_categoria");
+		String imagen = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+		String imagen_categoria = DIRECCION_IMGS + imagen;
+				
 		int id_cat = Integer.parseInt(request.getParameter("id_categoria"));
-		Categoria categoria_modificada = new Categoria(descripcion_categoria, imagen_categoria);
-		categoria_modificada.setIdCategoria(id_cat);
 		
+		Categoria categoria_modificada = null;
+		for(Categoria categoria : categorias) {
+			if(categoria.getIdCategoria() == id_cat) {
+				categoria_modificada = categoria;
+				break;
+			}
+		}
+		String descripcion_anterior = categoria_modificada.getDescripcionCategoria();
+		String imagen_anterior = categoria_modificada.getImagenCategoria();
+		categoria_modificada.setDescripcionCategoria(descripcion_categoria);
+		if(!imagen.equals(""))
+			categoria_modificada.setImagenCategoria(imagen_categoria);
 		String respuesta = null;
 		try {
 			this.cc.update(categoria_modificada);
-			copyFile(imagen,imagen_categoria);
+			if(!imagen.equals(""))
+				part.write(request.getServletContext().getRealPath(DIRECCION_IMGS) + File.separator + imagen);
 			
-			request.setAttribute("categorias", this.cc.getAll());
 			request.setAttribute("Info", "La categoría se modificó correctamente");
-		} catch (SQLException e) {
+		} catch (SQLException | ExcepcionImagen e) {
 			respuesta = e.getMessage();
-		} catch (IOException e) {
-			respuesta = "La categoría se agregó pero hubo un problema con la imagen";
+			categoria_modificada.setDescripcionCategoria(descripcion_anterior);
+			categoria_modificada.setImagenCategoria(imagen_anterior);
 		}
 		finally {
 			request.setAttribute("Error", respuesta);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistaCategoriasAdministrador.jsp");
 			dispatcher.forward(request, response);
 		}
-		
 	}
 
 	private void agregarCategoria(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String descripcion_categoria = request.getParameter("nombre_categoria");
-		String imagen = request.getParameter("imagen_categoria");			
-		String formato = imagen.split("[.]+")[1];	
-		String myStorageFolder= "/imgs/categorias/"; // this is folder name in where I want to store files. 
-		DIRECCION_IMGS = request.getServletContext().getRealPath(myStorageFolder); 
-		String imagen_categoria =  DIRECCION_IMGS + descripcion_categoria + "." + formato;
+		Part part = request.getPart("imagen_categoria");		
+		String imagen = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+		String imagen_categoria =  DIRECCION_IMGS + imagen;
 		
 		Categoria categoria_nueva = new Categoria(descripcion_categoria, imagen_categoria);
 		String respuesta = null;
 		try {
 			this.cc.insert(categoria_nueva);
-			copyFile(imagen,imagen_categoria);
+			part.write(request.getServletContext().getRealPath(DIRECCION_IMGS) + File.separator + imagen);
 			request.setAttribute("Info", "La categoría se agregó correctamente");
 		} catch (SQLException e) {
 			respuesta = e.getMessage();
-		} catch (IOException e) {
-			respuesta = "La categoría se agregó pero hubo un problema con la imagen";
+		} catch (ExcepcionImagen e) {
+			respuesta = e.getMessage();
 		}
 		finally {
 			request.setAttribute("Error", respuesta);
@@ -425,7 +428,7 @@ public class ControladorAdministrador extends HttpServlet {
 	private void verCategorias(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		try {
-			request.setAttribute("categorias", this.cc.getAll());
+			request.getSession().setAttribute("categorias", this.cc.getAll());
 		} catch (SQLException e) {
 			request.setAttribute("Error", e.getMessage());
 		} finally {
@@ -469,18 +472,5 @@ public class ControladorAdministrador extends HttpServlet {
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/login.jsp");
 		dispatcher.forward(request, response);
-	}
-
-	public static void copyFile(String origen, String destino) throws IOException {
-		
-		Path from = Paths.get(origen);
-		Path to = Paths.get(destino);
-		
-		CopyOption[] options = new CopyOption[] {
-				StandardCopyOption.REPLACE_EXISTING,
-				StandardCopyOption.COPY_ATTRIBUTES
-		};
-		
-		Files.copy(from, to, options);
 	}
 }

@@ -13,18 +13,20 @@ public abstract class EleccionHilos {
 	
 	protected static Double[] maximoYMinimo(ArrayList<Double> valores) {
     	
-    	Double[] maximo_minimo = new Double[2];
-    	maximo_minimo[0] = valores.get(0);
-    	maximo_minimo[1] = valores.get(0);
-    	
-    	for(double valor : valores) {
-    	    if(valor > maximo_minimo[0]) 
-    		    maximo_minimo[0] = valor;
-    	    if(valor < maximo_minimo[1]) 
-    		    maximo_minimo[1] = valor;
-    	}
-    	    	
-    	return maximo_minimo;
+		Double[] maximo_minimo = new Double[2];
+		if(valores.size() > 0) {
+			
+			maximo_minimo[0] = valores.get(0);
+			maximo_minimo[1] = valores.get(0);
+
+			for(double valor : valores) {
+				if(valor > maximo_minimo[0]) 
+					maximo_minimo[0] = valor;
+				if(valor < maximo_minimo[1]) 
+					maximo_minimo[1] = valor;
+			}
+		}
+		return maximo_minimo;
     }
 	
 	protected static ArrayList<Double> estandarizarValores(ArrayList<Double> valores_variables) {

@@ -1,6 +1,8 @@
 package Controladores;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -8,11 +10,13 @@ import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import Logica.CatalogoDeAportes;
 import Logica.CatalogoDeComunicadores;
@@ -27,6 +31,7 @@ import Modelo.Usuario;
  * Servlet implementation class ControladorUsuario
  */
 @WebServlet("/ControladorUsuario")
+@MultipartConfig
 public class ControladorUsuario extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -36,6 +41,7 @@ public class ControladorUsuario extends HttpServlet {
 	private CatalogoDeUsuarios cu;
 	private CatalogoDeComunicadores cc;
 	private CatalogoDeAportes ca;
+	protected static String DIRECCION_IMGS = "imgs\\usuarios\\";
 	
     public ControladorUsuario() {
         super();
@@ -130,25 +136,13 @@ public class ControladorUsuario extends HttpServlet {
 		
 		Usuario usuario = (Usuario)request.getSession().getAttribute("usuario");
 		
-		String imagen = request.getParameter("imagen_usuario");
-		//String formato = imagen.split("[.]+")[1]; 
-		//String DIRECCION_IMGS = new File("").getAbsolutePath()+"\\PortalDigital\\WebContent\\imgs\\usuarios\\";
-		
-		//String imagen_usuario =  DIRECCION_IMGS + usuario.getNombreUsuario() + "." + formato;
-		//String formato = imagen.split("[.]+")[1];			
-		String myStorageFolder= "/imgs/"; // this is folder name in where I want to store files. 
-		String DIRECCION_IMGS = request.getServletContext().getRealPath(myStorageFolder);
-		//String imagen_usuario = DIRECCION_IMGS + usuario.getNombreUsuario() + "." + formato;
-		
-		//System.out.println(imagen_usuario);
+		Part part = request.getPart("imagen_usuario");		
+		String imagen = Paths.get(part.getSubmittedFileName()).getFileName().toString();
 		
 		String imagen_anterior = usuario.getImagen();
-		//usuario.setImagen(imagen_usuario);
-		//usuario.setState(States.MODIFIED);
 		try {
 			this.cu.cambiarImagen(usuario, imagen, DIRECCION_IMGS);
-			//this.cu.save(usuario);
-			//ControladorLogin.copyFile(imagen,imagen_usuario);
+			part.write(request.getServletContext().getRealPath(DIRECCION_IMGS) + File.separator + imagen);
 			request.setAttribute("Info","Imagen modificada");
 		} 
 		catch (SQLException | ExcepcionCampos e) {

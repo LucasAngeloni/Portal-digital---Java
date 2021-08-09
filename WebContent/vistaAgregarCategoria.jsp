@@ -22,7 +22,7 @@
 				<h3>Crear categoría</h3>
 			</div>
 			<div class="col-6">
-				<form id="formRegistro" name="formRegistro" method="get"
+				<form id="formRegistro" name="formRegistro" method="post"
 					action="ControladorAdministrador" enctype="multipart/form-data">
 					<input type="hidden" name="instruccion" value="agregar_categoria">
 

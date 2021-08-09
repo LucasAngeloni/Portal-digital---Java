@@ -15,21 +15,21 @@ public class EleccionHilosPreferencias extends EleccionHilos{
 
 	public static ArrayList<Hilo> seleccionHilos(ArrayList<Hilo> hilos, ArrayList<Preferencia> preferencias){
 		
-		CANTIDAD_A_SELECCIONAR = 30;
-		HashMap<Integer,Double> puntajes;
-		try{
-		    puntajes = valoracionesHilos(hilos, preferencias);
-		}
-		catch(NullPointerException e) {
-			puntajes = valoracionesHilos(hilos, new ArrayList<Preferencia>());
-		}
-		
-		Integer[] indices = rankingHilos(puntajes);
-		
 		ArrayList<Hilo> hilos_seleccionados = new ArrayList<Hilo>();
-		for(int i=0;i<CANTIDAD_A_SELECCIONAR;i++)
-			hilos_seleccionados.add(hilos.get(indices[i]));
-		
+		if(hilos.size() > 0) {
+			CANTIDAD_A_SELECCIONAR = 30;
+			HashMap<Integer,Double> puntajes;
+			try{
+				puntajes = valoracionesHilos(hilos, preferencias);
+			}
+			catch(NullPointerException e) {
+				puntajes = valoracionesHilos(hilos, new ArrayList<Preferencia>());
+			}
+
+			Integer[] indices = rankingHilos(puntajes);
+			for(int i=0;i<CANTIDAD_A_SELECCIONAR;i++)
+				hilos_seleccionados.add(hilos.get(indices[i]));
+		}
 		return hilos_seleccionados;
 	}
 	

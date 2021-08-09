@@ -1,5 +1,6 @@
 package Datos;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -154,7 +155,7 @@ public class UsuarioData{
 		  return usuarios;
 	  }
 	  
-	  public void save(Usuario usuario) throws SQLException {
+	  public void save(Usuario usuario) throws SQLException, IOException {
 
 		  if(usuario.getState() == States.NEW) this.insert(usuario);
 
@@ -191,11 +192,9 @@ public class UsuarioData{
 		  }
 	  }
 	  
-	  protected void insert(Usuario usuario) throws SQLException {
+	  protected void insert(Usuario usuario) throws SQLException, IOException {
 		  
 		  PreparedStatement pst = null;
-		  PreferenciasData pd = new PreferenciasData();
-		  
 		  try {
 			  String consulta = "insert into usuarios values(?,?,?,null,null,?,null,?,?)";
 			  
@@ -208,7 +207,7 @@ public class UsuarioData{
 			  pst.setString(6, usuario.getContraseña());
 			  
 			  pst.executeUpdate();
-			  pd.insertPreferencias(usuario.getPreferencias(), usuario.getNombreUsuario());
+			  PreferenciasData.insertPreferencias(usuario.getPreferencias(), usuario.getNombreUsuario());
 		  }
 		  catch (SQLException e) {        
 			  throw new SQLException(e);

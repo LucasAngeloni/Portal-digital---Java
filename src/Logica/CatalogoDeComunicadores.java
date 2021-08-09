@@ -58,7 +58,15 @@ public class CatalogoDeComunicadores {
 			throw new ExcepcionCampos("Se deben completar todos los campos");
 		
 		this.validarFormatosDatos(usuario);
+		this.validarImagen(usuario.getImagen());
 		this.validarClave(usuario.getContraseña());
+	}
+	
+	private void validarImagen(String imagen) throws ExcepcionCampos {
+		Pattern pat = Pattern.compile(".+(.jpg|.png|.jfif)$");
+		Matcher mat = pat.matcher(imagen);
+		if(!mat.matches())
+			throw new ExcepcionCampos("El formato de la imagen no es válida. Debe ser .jpg, .png o .jfif");
 	}
 	
 	private void validarFormatosDatos(Usuario usuario) throws ExcepcionCampos {
@@ -74,7 +82,6 @@ public class CatalogoDeComunicadores {
 		if(!mat.matches())
 			throw new ExcepcionCampos("Formato del teléfono inválido");
 	}
-
 
 	private void validarClave(String clave) throws ExcepcionCampos {
 		

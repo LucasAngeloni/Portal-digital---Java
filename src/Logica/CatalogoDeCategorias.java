@@ -2,13 +2,12 @@ package Logica;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import Datos.CategoriaData;
-import Datos.PreferenciasData;
-import Datos.UsuarioData;
 import Modelo.Categoria;
 import Modelo.Hilo;
-import Modelo.Preferencia;
-import Modelo.Usuario;
 
 public class CatalogoDeCategorias {
 
@@ -44,40 +43,17 @@ public class CatalogoDeCategorias {
 	
 	public void delete(int id_categoria) throws SQLException {
 		try {			
-			/*UsuarioData ud = new UsuarioData();
-			
-			ArrayList<Usuario> usuarios = ud.getAll();
-			for(Usuario usuario : usuarios) {
-				usuario.removePreferencia(id_categoria);				
-				PreferenciasData.updatePreferencias(usuario.getPreferencias(), usuario.getNombreUsuario());
-			}*/
-			
 			this.categoriaData.delete(id_categoria);
 		} catch (SQLException e) {
 			throw new SQLException("Error al eliminar la categoria");
 		}
 	}
 	
-	public void insert(Categoria categoria) throws SQLException {
+	public void insert(Categoria categoria) throws SQLException, ExcepcionImagen {
 		
 		try {
-			this.categoriaData.insert(categoria);
-			/*int cant_categorias = this.cantidadCategorias();
-			
-			UsuarioData ud = new UsuarioData();
-			PreferenciasData pd = new PreferenciasData();
-			
-			ArrayList<Usuario> usuarios = ud.getAll();
-			Preferencia preferenciaNueva = new Preferencia(categoria, 1.0/cant_categorias);
-			for(Usuario usuario : usuarios) {
-				ArrayList<Preferencia> preferencias = new ArrayList<Preferencia>();
-				preferencias.add(preferenciaNueva);
-				
-				pd.insertPreferencias(preferencias, usuario.getNombreUsuario());
-				usuario.addPreferencia(preferenciaNueva);
-				PreferenciasData.updatePreferencias(usuario.getPreferencias(), usuario.getNombreUsuario());
-			}*/
-			
+			this.validarImagen(categoria.getImagenCategoria());
+			this.categoriaData.insert(categoria);			
 		} catch (SQLException e) {
 			if(e.getErrorCode() == 0)
 				throw new SQLException("El nombre de la categoría ya existe");
@@ -86,9 +62,10 @@ public class CatalogoDeCategorias {
 		}
 	}
 	
-	public void update(Categoria categoria) throws SQLException {
+	public void update(Categoria categoria) throws SQLException, ExcepcionImagen {
 		
 		try {
+			this.validarImagen(categoria.getImagenCategoria());
 			this.categoriaData.update(categoria);
 		}
 		catch (SQLException e) {
@@ -107,5 +84,20 @@ public class CatalogoDeCategorias {
 			throw new SQLException("Ha ocurrido un ERROR al buscar las categorias");
 		}
 		
+	}
+	
+	private void validarImagen(String imagen) throws ExcepcionImagen {
+		Pattern pat = Pattern.compile(".+(.jpg|.png|.jfif)$");
+		Matcher mat = pat.matcher(imagen);
+		if(!mat.matches())
+			throw new ExcepcionImagen("El formato de la imagen no es válida. Debe ser .jpg, .png o .jfif");
+	}
+	
+	public class ExcepcionImagen extends Exception{
+		private static final long serialVersionUID = 1L;
+
+		public ExcepcionImagen(String msg) {
+			super(msg);
+		}
 	}
 }
