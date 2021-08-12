@@ -42,7 +42,7 @@ public class ControladorLogin extends HttpServlet {
 	private CatalogoDeUsuarios cu;
 	private CatalogoDeComunicadores cc;
 	private CatalogoDeCategorias ccat;
-	protected static String DIRECCION_IMGS = "imgs\\usuarios\\";
+	protected static String DIRECCION_IMGS = "imgs"+File.separator+ "usuarios"+File.separator;
 	
     /**
      * @see HttpServlet#HttpServlet()

@@ -1,11 +1,9 @@
 package Modelo;
-
 public class Categoria {
 	
 	private int idCategoria;
 	private String descripcion;
 	private String imagen;
-	//private ArrayList<Hilo> hilosCategoria;
 	
 	public Categoria(int id, String descripcion) {
 		this.idCategoria = id;

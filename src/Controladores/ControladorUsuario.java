@@ -41,7 +41,7 @@ public class ControladorUsuario extends HttpServlet {
 	private CatalogoDeUsuarios cu;
 	private CatalogoDeComunicadores cc;
 	private CatalogoDeAportes ca;
-	protected static String DIRECCION_IMGS = "imgs\\usuarios\\";
+	protected static String DIRECCION_IMGS = "imgs"+File.separator+ "usuarios"+File.separator;
 	
     public ControladorUsuario() {
         super();
