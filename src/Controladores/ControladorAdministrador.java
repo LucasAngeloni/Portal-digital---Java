@@ -1,17 +1,8 @@
 package Controladores;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -351,7 +342,6 @@ public class ControladorAdministrador extends HttpServlet {
 		try {
 			this.cc.update(categoria_modificada);
 			if(!imagen.equals(""))
-				//copyFile(imagen, "C:\\Temp\\PortalDigital\\WebContent\\imgs\\categorias");
 				part.write(request.getServletContext().getRealPath(DIRECCION_IMGS) + File.separator + imagen);
 			
 			request.setAttribute("Info", "La categoría se modificó correctamente");
@@ -379,8 +369,6 @@ public class ControladorAdministrador extends HttpServlet {
 		try {
 			this.cc.insert(categoria_nueva);
 			part.write(request.getServletContext().getRealPath(DIRECCION_IMGS) + File.separator + imagen);
-			/*part.write(imagen_categoria);
-			copyFile(request.getServletContext().getRealPath(DIRECCION_IMGS) + imagen, DIRECCION_HOST + File.separator + imagen_categoria);*/
 			request.setAttribute("Info", "La categoría se agregó correctamente");
 		} catch (SQLException e) {
 			respuesta = e.getMessage();
@@ -489,23 +477,5 @@ public class ControladorAdministrador extends HttpServlet {
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/login.jsp");
 		dispatcher.forward(request, response);
-	}
-	
-	private static void copyFile(String origen, String destino) throws IOException {
-		
-		File copied = new File(origen);
-	    try (
-	      InputStream in = new BufferedInputStream(
-	        new FileInputStream(destino));
-	      OutputStream out = new BufferedOutputStream(
-	        new FileOutputStream(copied))) {
-	 
-	        byte[] buffer = new byte[1024];
-	        int lengthRead;
-	        while ((lengthRead = in.read(buffer)) > 0) {
-	            out.write(buffer, 0, lengthRead);
-	            out.flush();
-	        }
-	    }
 	}
 }

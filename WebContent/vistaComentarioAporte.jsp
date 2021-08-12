@@ -20,6 +20,10 @@
 	<c:param name="fecha_publicacion" value="${publicacion.getFechaPublicacion() }"></c:param>
 	<c:param name="usuario_aporte" value="${publicacion.getComunicador().getNombreUsuario() }"></c:param>
 </c:url>
+<c:url var="linkPerfil" value="ControladorUsuario">
+	<c:param name="instruccion" value="perfil"></c:param>
+	<c:param name="usu" value="${comunicador.getNombreUsuario() }"></c:param>
+</c:url>
 
 <div class="comentario">
 	<div class="row">

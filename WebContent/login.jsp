@@ -21,7 +21,7 @@
 	              <h3>Iniciar Sesión</h3>
 	      	</div>
 	      	<div class="col-6">
-	      		<form method="get" action="ControladorLogin">		
+	      		<form method="post" action="ControladorLogin">		
 	      			<input type="hidden" name="instruccion" value="inicio_sesion">
 	      			<div class="form-group row">
 	      				<label for="nombreUsuario" class="col-3 col-form-label">Nombre de usuario</label>
@@ -33,7 +33,7 @@
 	      			<div class="form-group row">
 	      				<label for="clave" class="col-3 col-form-label">Clave</label>
 	      				<div class="col-9">
-	      					<input type="text" class="form-control" id="txtClave" 
+	      					<input type="password" class="form-control" id="txtClave" 
 	      						name="clave" placeholder="Clave">
 	      				</div>				
 	      			</div>

@@ -34,7 +34,7 @@
 			<!-- MENU DE OPCIONES -->
 		</header>
 		<div class="col-8 perfil">
-			<div class="row titulo">
+			<div class="row cabecera">
 				<h4>
 					<strong>Perfil</strong>
 				</h4>
@@ -53,7 +53,7 @@
 						${COMUNICADOR.getDescripcion() }</div>
 				</div>
 			</div>
-			<div class="row">
+			<div class="row bar">
 				<nav class="navbar navbar-expand-lg navbar-light">
 					<div class="collapse navbar-collapse" id="navbarNav">
 						<ul id="nav-list" class="navbar-nav">

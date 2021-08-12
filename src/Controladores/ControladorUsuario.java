@@ -268,17 +268,25 @@ public class ControladorUsuario extends HttpServlet {
 			dispatcher.forward(request, response);	
 		}
 		else {
+			String destino = "/perfilComunicador.jsp";
 			Comunicador com;
 			try {
 				com = this.cc.getOne(usuarioPerfil);
-				session.setAttribute("COMUNICADOR", com);
-				request.setAttribute("HILOS", com.getHilos());
+				if(com.getNombre() != null) {
+					session.setAttribute("COMUNICADOR", com);
+					request.setAttribute("HILOS", com.getHilos());
+				}
+				else {
+					request.setAttribute("lector", com.castUsuario());
+					request.setAttribute("NOTAS", com.getNotasRelevantes());
+					destino = "/perfilLector.jsp";
+				}
 			}
 			catch (SQLException e) {
 				request.setAttribute("Error", e.getMessage());
 			}
 			finally {
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/perfilComunicador.jsp");
+				RequestDispatcher dispatcher = request.getRequestDispatcher(destino);
 				dispatcher.forward(request, response);
 			}
 		}

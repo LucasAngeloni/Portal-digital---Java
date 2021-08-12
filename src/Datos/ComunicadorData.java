@@ -206,7 +206,6 @@ public class ComunicadorData{
 	protected void insert(Comunicador usuario) throws SQLException {
 		
 		PreparedStatement pst = null;
-		PreferenciasData pd = new PreferenciasData();
 		try {
 			String consulta = "insert into usuarios values(?,?,?,?,?,?,?,?,?)";
 			  
@@ -222,7 +221,7 @@ public class ComunicadorData{
 			pst.setString(9, usuario.getContraseña());
 			  
 			pst.executeUpdate();
-			pd.insertPreferencias(usuario.getPreferencias(), usuario.getNombreUsuario());
+			PreferenciasData.insertPreferencias(usuario.getPreferencias(), usuario.getNombreUsuario());
 		}
 		catch (SQLException e) {        
 			throw new SQLException(e);

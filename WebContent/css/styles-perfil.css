@@ -4,8 +4,9 @@
 	border-width: 1px;
 }
 
-.perfil .titulo{
+.perfil .cabecera{
 	padding: 8px 0px 8px 16px;
+	background-color: #3C2901;
 }
 .perfil .datos-principales{
 	border-top-style: solid;
@@ -27,4 +28,9 @@
 }
 .perfil .navs li{
 	margin-right: 150px;
+}
+.bar{
+	border-bottom-style: solid;
+	border-width: 1px;
+	background-color: #3C2901;
 }
