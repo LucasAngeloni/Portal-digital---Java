@@ -1,8 +1,8 @@
-<Context path="/login.jsp">
-	<Resource name="jdbc/PortalDigital/ControladorVistaPrincipal" auth="Container" type="javax.sql.DataSource"
+<Context>
+	<Resource name="jdbc/PortalDigital" auth="Container" type="javax.sql.DataSource"
 		maxTotal="15" maxIdle="3" maxWait="5000"
 		username="root" password = "lucas123"
 		driverClassName = "com.mysql.cj.jdbc.Driver"
-		url="jdbc:mysql://localhost:6152/PortalDigital/login.jsp">
+		url="jdbc:mysql://localhost:3306/telar?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC">
 	</Resource>
 </Context>

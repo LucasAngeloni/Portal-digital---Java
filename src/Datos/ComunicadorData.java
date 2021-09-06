@@ -23,8 +23,7 @@ public class ComunicadorData{
 					  
   		  String consulta = "Select * from usuarios where nombre_usuario = ?";                       
   		
-  		  Connection con = FactoryConnection.getInstancia().getConnection(); 
-  		  pst = con.prepareStatement(consulta);            
+  		  pst = FactoryConnection.getInstancia().getConnection().prepareStatement(consulta);            
   		  pst.setString(1, nombreUsuario);
   		   
   		  resultSet = pst.executeQuery();                        
@@ -70,11 +69,10 @@ public class ComunicadorData{
 		ComentarioData cd = new ComentarioData();
 		PreferenciasData pd = new PreferenciasData();
 		AporteData ad = new AporteData();
+		Connection con = FactoryConnection.getInstancia().getConnection(); 
 		try {
 					  
   		  String consulta = "Select * from usuarios where nombre_usuario = ? and contraseña=?";                       
-  		
-  		  Connection con = FactoryConnection.getInstancia().getConnection(); 
   		  pst = con.prepareStatement(consulta);            
   		  pst.setString(1, nombreUsuario);
   		  pst.setString(2, clave);

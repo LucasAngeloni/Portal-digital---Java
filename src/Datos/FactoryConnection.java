@@ -4,9 +4,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import javax.annotation.Resource;
+import javax.sql.DataSource;
+
+import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
+
 public class FactoryConnection {
-	
-	private static FactoryConnection instancia;
+private static FactoryConnection instancia;
 	
 	private String driver="com.mysql.cj.jdbc.Driver";
 	private String host="jdbc:mysql://node3018-portaldigital.sp.skdrive.net/portal";

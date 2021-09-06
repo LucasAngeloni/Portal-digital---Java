@@ -6,13 +6,16 @@ import java.sql.SQLException;
 import java.net.UnknownHostException;*/
 import java.util.ArrayList;
 
+import javax.annotation.Resource;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
+import Datos.FactoryConnection;
 import Logica.*;
 import Modelo.Categoria;
 import Modelo.Hilo;
@@ -31,6 +34,8 @@ public class ControladorVistaPrincipal extends HttpServlet {
 	private ArrayList<Hilo> hilos;
 	private int indiceHilos;
        
+
+	
     @Override
 	public void init() throws ServletException {
 		super.init();

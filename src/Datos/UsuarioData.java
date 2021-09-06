@@ -81,8 +81,7 @@ public class UsuarioData{
     		  
     		  String consulta = "Select * from usuarios where nombre_usuario = ?";                       
     		
-    		  Connection con = FactoryConnection.getInstancia().getConnection(); 
-    		  pst = con.prepareStatement(consulta);            
+    		  pst = FactoryConnection.getInstancia().getConnection().prepareStatement(consulta);            
     		  pst.setString(1, nombreUsuario);
     		   
     		  resultSet = pst.executeQuery();                        

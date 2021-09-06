@@ -8,12 +8,16 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import javax.annotation.Resource;
+import javax.sql.DataSource;
+
 import Modelo.Categoria;
 import Modelo.Hilo;
 import Modelo.Nota;
 
-public class HiloData{
 
+public class HiloData{
+	
 	public Hilo getOne(int id_hilo) throws SQLException {
 		
 		ComunicadorData cd = new ComunicadorData();
@@ -23,7 +27,7 @@ public class HiloData{
 		
 		Hilo hilo = null;
 		PreparedStatement pst = null;
-		ResultSet resultSet = null;		
+		ResultSet resultSet = null;
 		try {
 			
 			String consulta = "Select * from hilos where id_hilo = ?";
@@ -70,7 +74,7 @@ public class HiloData{
 		
 		ArrayList<Hilo> hilosImportantes = new ArrayList<Hilo>();
 		PreparedStatement pst = null;
-		ResultSet resultSet = null;		
+		ResultSet resultSet = null;
 		try {
 			String consulta = "Select * from hilos order by relevancia_hilo desc";
 			
@@ -104,6 +108,7 @@ public class HiloData{
 				if(resultSet != null) resultSet.close();
 				if(pst!=null) pst.close();
 				FactoryConnection.getInstancia().closeConnection();
+				//FactoryConnection.getInstancia().closeConnection(con);
 			} 
 			catch (SQLException e) {
 				throw new SQLException(e);
