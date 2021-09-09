@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-    pageEncoding="utf-8"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="Modelo.*" %>
 <!DOCTYPE html>
@@ -14,6 +14,18 @@
 <link rel="stylesheet" href="css/styles-hilo.css">
 <title>Hilos</title>
 </head>
+
+<c:url var="linkVerMas" value="ControladorAdministrador">
+	<c:param name="instruccion" value="publicaciones"></c:param>
+	<c:param name="accion" value="siguiente"></c:param>
+	<c:param name="indice" value="${indice }"></c:param>
+</c:url>
+<c:url var="linkAnterior" value="ControladorAdministrador">
+	<c:param name="instruccion" value="publicaciones"></c:param>
+	<c:param name="accion" value="anterior"></c:param>
+	<c:param name="indice" value="${indice }"></c:param>
+</c:url>
+
 <body>
 	<div class="container-fluid">	
 		<header class="menu-administrador row">
@@ -51,9 +63,9 @@
 						<tr>
 							<th scope="col">#</th>
 							<th scope="col">Comunicador</th>
-							<th scope="col" align="center">TÃ­tulo</th>
+							<th scope="col" align="center">Título</th>
 							<th scope="col">Nota Principal</th>
-							<th scope="col">Fecha de PublicaciÃ³n</th>
+							<th scope="col">Fecha de Publicación</th>
 							<th scope="col"></th>
 							<th scope="col"></th>
 						</tr>
@@ -86,8 +98,8 @@
 				<div class="offset-5">
 					<nav aria-label="Page navigation example">
 						<ul class="pagination">
-							<li class="page-item"><a class="page-link" href="#">Anterior</a></li>
-							<li class="page-item"><a class="page-link" href="#">MÃ¡s
+							<li class="page-item"><a class="page-link" href="${linkAnterior }">Anterior</a></li>
+							<li class="page-item"><a class="page-link" href="${linkVerMas }">Más
 									Hilos</a></li>
 						</ul>
 					</nav>

@@ -14,6 +14,18 @@
 <link rel="stylesheet" href="css/styles-hilo.css">
 <title>Comentarios</title>
 </head>
+
+<c:url var="linkVerMas" value="ControladorAdministrador">
+	<c:param name="instruccion" value="comentarios"></c:param>
+	<c:param name="accion" value="siguiente"></c:param>
+	<c:param name="indice" value="${indice }"></c:param>
+</c:url>
+<c:url var="linkAnterior" value="ControladorAdministrador">
+	<c:param name="instruccion" value="comentarios"></c:param>
+	<c:param name="accion" value="anterior"></c:param>
+	<c:param name="indice" value="${indice }"></c:param>
+</c:url>
+
 <body>
 	<div class="container-fluid">
 		<header class="menu-administrador row">
@@ -107,9 +119,8 @@
 				<div class="offset-5">
 					<nav aria-label="Page navigation example">
 						<ul class="pagination">
-							<li class="page-item"><a class="page-link" href="#">Anterior</a></li>
-							<li class="page-item"><a class="page-link" href="#">Más
-									Hilos</a></li>
+							<li class="page-item"><a class="page-link" href="${linkAnterior}">Anterior</a></li>
+							<li class="page-item"><a class="page-link" href="${linkVerMas}">Más</a></li>
 						</ul>
 					</nav>
 				</div>

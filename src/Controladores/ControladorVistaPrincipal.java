@@ -98,7 +98,7 @@ public class ControladorVistaPrincipal extends HttpServlet {
 		int limite = this.indiceHilos + 4;
 		int i = 0;
 		
-		while(i < limite && i < this.hilos.size() ) {
+		while(this.hilos!=null && i < limite && i < this.hilos.size() ) {
 			hilosInicio.add(this.hilos.get(i));
 			i += 1;
 			this.indiceHilos += 1;

@@ -418,8 +418,40 @@ public class ControladorAdministrador extends HttpServlet {
 
 	private void verComentarios(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		HttpSession session = request.getSession();
 		try {
-			request.getSession().setAttribute("comentarios", this.cco.getAll());
+			ArrayList<Comentario> comentarios = (ArrayList<Comentario>)session.getAttribute("comentarios_totales");
+			ArrayList<Comentario> comentarios_salida = new ArrayList<Comentario>();
+			int i = 0;
+			if(comentarios == null) {
+				comentarios = this.cco.getAll();
+				request.getSession().setAttribute("comentarios_totales", comentarios);
+			}
+			
+			String accion = request.getParameter("accion");
+			if(accion == null) accion = "";
+			switch(accion) {
+			case "siguiente":
+				i = Integer.parseInt(request.getParameter("indice").toString());
+				if(i >= comentarios.size())
+					request.setAttribute("Info", "No hay más comentarios");
+				request.setAttribute("indice", i+10);
+				break;
+			case "anterior":
+				i = Integer.parseInt(request.getParameter("indice").toString());
+				i = i-10;
+				if(i<0) i=0;
+				request.setAttribute("indice", i);
+				break;
+			default:
+				request.setAttribute("indice", 10);
+			}
+			int limite = i+10;
+			while(i < limite && i < comentarios.size()) {
+				comentarios_salida.add(comentarios.get(i));
+				i++;
+			}
+			request.setAttribute("comentarios", comentarios_salida);
 		} catch (SQLException e) {
 			request.setAttribute("Error", e.getMessage());
 		}
@@ -445,8 +477,41 @@ public class ControladorAdministrador extends HttpServlet {
 
 	private void verPublicaciones(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		HttpSession session = request.getSession();
 		try {
-			request.getSession().setAttribute("hilos", this.ch.getHilosMasRecientes(LocalDateTime.now()));
+			ArrayList<Hilo> hilos = (ArrayList<Hilo>)session.getAttribute("hilos_totales");
+			ArrayList<Hilo> hilos_salida = new ArrayList<Hilo>();
+			int i = 0;
+			if(hilos == null) {
+				hilos = this.ch.getHilosMasRecientes(LocalDateTime.now());
+				request.getSession().setAttribute("hilos_totales", hilos);
+			}
+			else {
+				String accion = request.getParameter("accion");
+				if(accion == null) accion = "";
+				switch(accion) {
+				case "siguiente":
+					i = Integer.parseInt(request.getParameter("indice").toString());
+					if(i >= hilos.size())
+						request.setAttribute("Info", "No hay más hilos");
+					request.setAttribute("indice", i+5);
+					break;
+				case "anterior":
+					i = Integer.parseInt(request.getParameter("indice").toString());
+					i = i-5;
+					if(i<0) i=0;
+					request.setAttribute("indice", i);
+					break;
+				default:
+					request.setAttribute("indice", 5);
+				}
+			}
+			int limite = i+5;
+			while(i < limite && i < hilos.size()) {
+				hilos_salida.add(hilos.get(i));
+				i++;
+			}
+			request.setAttribute("hilos", hilos_salida);
 		} catch (SQLException e) {
 			request.setAttribute("Error", e.getMessage());
 		} finally {

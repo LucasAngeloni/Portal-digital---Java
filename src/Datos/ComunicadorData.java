@@ -1,7 +1,6 @@
 package Datos;
 
 import java.net.ConnectException;
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -69,11 +68,10 @@ public class ComunicadorData{
 		ComentarioData cd = new ComentarioData();
 		PreferenciasData pd = new PreferenciasData();
 		AporteData ad = new AporteData();
-		Connection con = FactoryConnection.getInstancia().getConnection(); 
 		try {
 					  
   		  String consulta = "Select * from usuarios where nombre_usuario = ? and contraseña=?";                       
-  		  pst = con.prepareStatement(consulta);            
+  		  pst = FactoryConnection.getInstancia().getConnection().prepareStatement(consulta);            
   		  pst.setString(1, nombreUsuario);
   		  pst.setString(2, clave);
   		   
